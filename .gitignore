@@ -1,0 +1,12 @@
+# Alleen de website en hostingdocumentatie publiceren naar GitHub.
+/*
+!/.gitignore
+!/README.md
+!/site/
+
+# Lokale instellingen en geheimen uitsluiten, ook binnen de website.
+**/.env
+**/.env.*
+**/node_modules/
+**/Thumbs.db
+**/.DS_Store
