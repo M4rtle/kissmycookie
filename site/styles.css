@@ -143,3 +143,121 @@ body.has-welcome{overflow:hidden}
 .atelier-logo.is-playing video{visibility:visible}
 .atelier-logo.is-playing img{visibility:hidden}
 @media(max-width:700px){.signature .atelier-logo{width:107px;height:107px}}
+
+/* Welcome sizing uses both viewport dimensions, including tablet landscape. */
+.welcome-intro{height:100vh;height:100dvh;padding:24px;padding:max(20px,env(safe-area-inset-top)) max(20px,env(safe-area-inset-right)) max(20px,env(safe-area-inset-bottom)) max(20px,env(safe-area-inset-left))}
+.welcome-content{min-width:0;max-width:880px}
+.welcome-brand{width:min(260px,38vw,28vh);width:min(260px,38vw,28dvh);height:auto;aspect-ratio:1;flex:none}
+.welcome-brand video,.atelier-logo video{border:0;outline:none!important;box-shadow:none;pointer-events:none}
+.welcome-content>.eyebrow{overflow-wrap:anywhere}
+.welcome-skip{min-height:44px;padding:12px 8px}
+#hero-images{cursor:pointer;touch-action:manipulation;border-radius:18px}
+#hero-images:focus-visible{outline:2px solid white;outline-offset:6px}
+.hero-showcase .hero-viewer.hero-filling-pair{min-height:0}
+.hero-filling-pair #hero-photo,#hero-cut img{max-height:100%;object-fit:contain}
+.hero-interaction button{min-height:44px;min-width:44px}
+.hero-interaction #hero-pause{min-height:44px;padding:10px 12px}
+
+/* Tablets need a compact navigation and room for the product details. */
+@media(max-width:1100px){
+ html{scroll-padding-top:98px}
+ .header{height:88px;padding-inline:5%;gap:18px}
+ .brand-lockup img{width:61px;height:61px}
+ .brand-lockup>span{font-size:21px}
+ .brand-lockup small{font-size:6px;letter-spacing:.15em;margin-top:6px}
+ .brand-lockup{gap:9px}
+ .menu-toggle{display:flex;align-items:center;gap:10px;min-height:44px;padding:10px 8px;background:none;border:0;font-size:12px;flex:none}
+ .header nav{display:none;position:absolute;left:0;right:0;top:100%;background:var(--paper);padding:18px 5% 24px;border-bottom:1px solid var(--line);box-shadow:0 20px 20px #30382c0c;max-height:calc(100vh - 88px);max-height:calc(100dvh - 88px);overflow-y:auto}
+ .header nav.open{display:flex;flex-direction:column;align-items:stretch;gap:8px}
+ .header nav a{display:flex;align-items:center;min-height:44px;padding:10px 12px;font-size:13px}
+ .hero{grid-template-columns:minmax(0,1fr) minmax(0,1fr);min-height:620px}
+ .hero-copy{padding:42px 9%}
+ .hero h1{font-size:clamp(40px,5.1vw,56px)}
+ .hero-visual{min-height:620px}
+ .hero-showcase{top:45%;width:88%}
+ .hero-caption{left:24px;right:24px;bottom:26px}
+ .hero-caption p{max-width:none}
+ .experience-layout{grid-template-columns:minmax(0,1fr);gap:32px}
+ .viewer-panel{width:100%;max-width:720px;justify-self:center}
+ .flavor-detail{min-width:0}
+ .product-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+ .story,.order,.faq{gap:6%}
+ .values{flex-wrap:wrap;gap:14px 28px}
+ .flavor-detail select{font-size:16px;min-height:44px}
+ .view-tabs button,.filters button,.collection-tabs a{min-height:44px}
+ .viewer-actions>button:not(.button){width:44px;height:44px;flex:none}
+ .angle-control{flex-wrap:wrap;row-gap:12px}
+ .angle-control input{min-height:44px}
+ .angle-control button{min-height:44px;padding:8px}
+ .warmth-ribbon{gap:16px}
+ .warmth-ribbon .warmth-frame{height:190px}
+}
+@media(max-width:850px){
+ .hero{display:flex;flex-direction:column;min-height:0}
+ .hero-copy{padding:36px 6%}
+ .hero h1{font-size:clamp(43px,7vw,60px)}
+ .hero-visual{height:auto;min-height:0;padding:26px 6% 30px;display:flex;flex-direction:column;align-items:center}
+ .hero-edition{position:static;align-self:flex-start;line-height:1.6}
+ .hero-showcase{position:relative;inset:auto;transform:none;width:min(100%,480px);aspect-ratio:auto;margin:22px auto 26px;padding:12px 0}
+ .hero-showcase .hero-orbit{top:50%;left:50%;transform:translate(-50%,-50%);width:88%;height:auto;aspect-ratio:1}
+ .hero-showcase .hero-viewer{width:100%;aspect-ratio:1.5}
+ .hero-showcase .hero-interaction{margin-top:12px}
+ .hero-showcase:has(.hero-filling-pair){width:min(100%,520px)}
+ .hero-caption{position:static;align-self:flex-start;width:100%}
+ .hero-caption h2{font-size:32px}
+ .hero-caption p{font-size:12px}
+ .hero-caption>span{font-size:9px}
+ .story,.order,.faq{grid-template-columns:minmax(0,1fr);gap:32px}
+ .story-photo{max-width:600px;width:100%;justify-self:center}
+ .story-copy>p:not(.eyebrow){max-width:none}
+ .mixed-box-photo img{height:auto;max-height:500px;aspect-ratio:1.2}
+ .section-heading{display:block}
+ .section-heading>p{margin-top:20px}
+ .warmth-atelier{max-width:none}
+}
+@media(max-width:700px){
+ .welcome-brand{width:min(220px,56vw,28vh);width:min(220px,56vw,28dvh);margin-bottom:22px}
+ .welcome-content{padding:0}
+ .welcome-title{font-size:clamp(27px,7.4vw,38px)}
+ .header{padding-inline:5%;gap:8px}
+ .hero-copy{padding:30px 6% 36px}
+ .hero-copy>p:not(.eyebrow) br{display:none}
+ .hero-actions{width:100%;justify-items:start;text-align:left;gap:16px}
+ .hero-copy .hero-actions .quiet-link{padding-block:8px;font-size:12px}
+ .hero-showcase{margin-top:20px}
+ .hero-orbit:after{inset:-16px}
+ .product-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .product-caption{padding-right:0}
+ .values{font-size:8px;gap:8px 16px;line-height:1.5}
+ .section{padding:48px 6%}
+ .section h2{font-size:clamp(32px,9vw,42px)}
+ .viewer-top{align-items:flex-start}
+ .viewer-top .view-tabs{width:100%;gap:2px}
+ .view-tabs button{flex:1;padding:8px 6px;font-size:10px}
+ .viewer-actions{flex-wrap:wrap}
+ .viewer-actions .button{min-height:44px;flex:1;justify-content:center;gap:12px}
+ .order .button{width:100%;justify-content:center;gap:12px;white-space:normal;text-align:center}
+ .warmth-ribbon .warmth-frame{height:165px}
+ .warmth-ribbon .warmth-batch{height:150px}
+ .sweet-caption h3{font-size:clamp(20px,5.5vw,25px)}
+ footer{align-items:center}
+ .footer-logo{width:100%;min-width:0}
+}
+@media(max-width:360px){
+ .brand-lockup>span{font-size:18px}
+ .brand-lockup img{width:50px;height:50px}
+ .brand-lockup small{font-size:5px}
+ .header .menu-toggle{font-size:11px;padding-inline:4px;gap:6px}
+ .hero-interaction #hero-open{min-width:160px;width:160px}
+ .hero-favorite-controls{gap:8px}
+}
+@media(max-height:600px){
+ .welcome-intro{padding-block:16px}
+ .welcome-brand{width:min(150px,26vh);width:min(150px,26dvh);margin-bottom:12px}
+ .welcome-title{font-size:clamp(24px,4vw,30px)}
+ .welcome-content>.eyebrow{margin-bottom:12px}
+ .welcome-skip{margin-top:12px}
+}
+/* Leave space between the favorite controls and its caption. */
+@media(min-width:1101px){.hero-showcase{top:calc(50% - 70px)}}
+@media(min-width:851px) and (max-width:1100px){.hero-showcase{top:40%}}

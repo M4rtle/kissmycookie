@@ -57,9 +57,9 @@ function photoMode(mode){
   $('#view-filling').setAttribute('aria-pressed',String(filling));
   const extra=mode===true&&ownPhotoExtras[f.id];
   $('.canvas-wrap').classList.toggle('own-photo-pair',Boolean(extra));ownPhotoExtra.hidden=!extra;ownPhotoLabel.hidden=!extra;
-  if(extra){ownPhotoExtraImage.src='assets/photos/'+extra+'.webp';ownPhotoExtraImage.alt='Vrijgemaakte eigen foto van de open '+f.name+' met zichtbare vulling';}
+  if(extra){ownPhotoExtraImage.src='assets/photos/'+extra+'.webp';ownPhotoExtraImage.alt='Open product: '+f.name+' met zichtbare vulling';}
   $('#reference-photo').src=filling?'assets/fillings/'+(f.fillingImage||f.id+'.png'):art?'assets/products/'+f.id+'.webp':'assets/photos/'+(ownPhotoOverrides[f.id]||f.id)+'.webp';
-  $('#reference-photo').alt=(filling?'Voorstelling zonder bovenste schelp, met zichtbare vulling van ':art?'Voorstelling van ':'Eigen productfoto van ')+f.name;
+  $('#reference-photo').alt=(filling?'Voorstelling zonder bovenste schelp, met zichtbare vulling van ':art?'Voorstelling van ':'Product: ')+f.name;
   if(mode===true&&f.ownPhotoContext){$('#reference-photo').alt=f.ownPhotoAlt||f.ownPhotoContext;ownPhotoLabel.textContent=f.ownPhotoContext;ownPhotoLabel.hidden=false;}else ownPhotoLabel.textContent='Macaron';
   if(!photo)viewer.draw();
 }

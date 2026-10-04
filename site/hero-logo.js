@@ -67,6 +67,8 @@
 
   intro.classList.add('is-introducing');
   intro.showModal();
+  // Keep initial focus on the dialog, away from the decorative video.
+  intro.focus({preventScroll:true});
   document.body.classList.add('has-welcome');
   if (!video.canPlayType('video/webm')) { fallback(); return; }
   video.muted = true;

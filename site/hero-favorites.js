@@ -7,6 +7,7 @@
     'tiramisu': 'Een opkikkertje met Italiaanse manieren.'
   };
   const openButton = document.querySelector('#hero-open');
+  const images = document.querySelector('#hero-images');
   const pauseButton = document.querySelector('#hero-pause');
   const motion = matchMedia('(prefers-reduced-motion: reduce)');
   let index = 0, open = false, paused = motion.matches;
@@ -23,6 +24,8 @@
     description.append(details.join('. ') + '.');
     if (finish) description.append(document.createElement('br'), finish[1] + '.');
     openButton.setAttribute('aria-pressed', String(open));
+    images.setAttribute('aria-pressed', String(open));
+    images.setAttribute('aria-label', (open ? 'Toon de macaron ' : 'Kijk binnenin ') + flavor.name);
     openButton.innerHTML = open ? 'Toon de macaron <span>−</span>' : 'Kijk binnenin <span>＋</span>';
     document.querySelector('#hero-images').classList.toggle('hero-filling-pair', open);
     document.querySelector('#hero-cut').hidden = !open;
@@ -38,7 +41,12 @@
     pauseButton.setAttribute('aria-pressed', String(paused));
     pauseButton.textContent = paused ? 'Hervat wisselen' : 'Pauzeer wisselen';
   };
-  openButton.addEventListener('click', () => { open = !open; render(); });
+  const toggle = () => { open = !open; render(); };
+  openButton.addEventListener('click', toggle);
+  images.addEventListener('click', toggle);
+  images.addEventListener('keydown', event => {
+    if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); toggle(); }
+  });
   document.querySelector('#hero-previous').addEventListener('click', () => move(-1));
   document.querySelector('#hero-next').addEventListener('click', () => move(1));
   pauseButton.addEventListener('click', () => { paused = !paused; syncPause(); });
