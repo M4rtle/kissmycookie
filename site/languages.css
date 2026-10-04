@@ -1,0 +1,50 @@
+/* Compact language controls stay available outside the mobile menu. */
+.header-actions{display:flex;align-items:center;gap:18px;flex-shrink:0}
+.language-switcher{display:flex;align-items:center;gap:2px;border:1px solid var(--line);border-radius:5px;padding:3px}
+.language-switcher button{border:0;background:transparent;color:var(--muted);padding:9px 7px;font:500 11px DM,sans-serif;border-radius:3px;min-width:30px;min-height:34px}
+.language-switcher button[aria-pressed=true]{background:var(--blue);color:white}
+.language-switcher button:hover{background:#e4edff;color:var(--ink)}
+.language-switcher button[aria-pressed=true]:hover{background:#1643b8;color:white}
+.header nav{gap:clamp(12px,1.5vw,28px)}
+.product-photo:after{content:var(--product-view-label,'Bekijk')}
+.hero-actions{display:flex;flex-wrap:wrap;align-items:center;gap:16px 20px}
+.hero-actions .quiet-link{margin-left:0}
+.hero-copy,.hero-visual,.story-copy,.order-intro{min-width:0}
+.hero-interaction #hero-open{width:auto;min-width:180px}
+.hero-caption{right:25px}
+.hero-caption p{max-width:100%}
+html[lang=fr] .hero h1{font-size:clamp(46px,4.1vw,66px)}
+html[lang=fr] .values{letter-spacing:.05em}
+.privacy-header{gap:20px;flex-wrap:wrap;height:auto;min-height:106px;padding-block:18px}
+.privacy-header>.text-link{margin-top:0;margin-left:auto}
+.privacy-header .header-actions{margin-left:0}
+@media(max-width:1180px){
+ .header:not(.privacy-header){position:sticky;gap:12px;min-height:88px;height:auto;padding-block:10px}
+ .header .menu-toggle{display:flex;gap:8px;align-items:center;background:none;border:0;font-size:12px;padding:10px 0}
+ .header:not(.privacy-header) nav{display:none;position:absolute;left:0;right:0;top:100%;background:var(--paper);padding:22px 6% 28px;border-bottom:1px solid var(--line);box-shadow:0 20px 20px #30382c0c}
+ .header nav.open{display:flex;align-items:stretch;flex-direction:column;gap:20px}
+ .header-actions{margin-left:auto}
+}
+@media(max-width:700px){
+ .header:not(.privacy-header){flex-wrap:wrap;padding:10px 6%;gap:4px 12px}
+ .header-actions{gap:10px}
+ .brand-lockup>span{font-size:19px}
+ .language-switcher button{padding:6px 5px;min-width:28px;min-height:32px}
+ html[lang=fr] .hero h1{font-size:48px}
+ .hero-actions{gap:14px}
+ .values{flex-wrap:wrap;gap:8px 12px}
+ .sweet-caption h3,.flavor-detail h3{overflow-wrap:break-word}
+ .privacy-header{padding-inline:6%}
+ .privacy-header>.text-link{font-size:11px}
+ .privacy-header .header-actions{width:100%;justify-content:flex-end}
+ html[lang=fr] .privacy h1{font-size:clamp(44px,14vw,55px)}
+}
+@media(max-width:480px){
+ .header:not(.privacy-header) .header-actions{width:100%;justify-content:space-between;margin-left:0}
+ .header:not(.privacy-header) .brand-lockup{margin:auto}
+ html{scroll-padding-top:140px}
+ html[lang=fr] .hero h1{font-size:44px}
+ .hero-caption p{font-size:10px}
+ .hero-edition{right:20px}
+}
+@media(max-width:360px){html[lang=fr] .hero h1{font-size:39px}.order .button{gap:12px;padding-inline:14px}}

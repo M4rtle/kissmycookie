@@ -1,6 +1,6 @@
 const flavors=[
 {id:'speculaas',name:'Speculaas',category:'classic',image:'1672670113055.jpg',tag:'Een kruidige klassieker',description:'Speculaas in twee texturen. Een zachte witte chocoladeganache met speculaas rondom een hart van speculaaspasta.',shell:'#e3d4b7',filling:'#b88d67',core:'#95603c',crumbs:'#b58a59',layers:[['De vulling','Witte chocoladeganache met speculaas'],['De kern','Speculaaspasta']]},
-{id:'red-velvet',name:'Red Velvet',category:'dessert',image:'1672670113066.jpg',tag:'Zacht met karakter',description:'Een rode cacao-macaron met een zachte Macarpone-botercreme.',shell:'#ad3444',filling:'#f3e7d4',layers:[['De vulling','Macarpone-botercreme']]},
+{id:'red-velvet',name:'Red Velvet',category:'dessert',image:'1672670113066.jpg',tag:'Zacht met karakter',description:'Een rode cacao-macaron met een zachte mascarponebotercrème.',shell:'#ad3444',filling:'#f3e7d4',layers:[['De vulling','Mascarponebotercrème']]},
 {id:'creme-brulee',name:'Crème Brûlée',category:'dessert classic',image:'1672670113076.jpg',tag:'Vanille, karamel & gebrande suiker',description:'Alles wat je zo graag proeft in crème brûlée, gevangen in één macaron.',shell:'#e6bb74',filling:'#f7e7bf',core:'#b16a28',burnt:true,layers:[['De afwerking','Gebrand met vanillesuiker'],['De vulling','Franse vanillebotercrème'],['De kern','Karamel']]},
 {id:'hazelnoot',name:'Salty Sweet Hazel',category:'classic chocolate',image:'1672670113086.jpg',fillingImage:'hazelnoot-v2.png',materialImage:'hazelnoot-v2.webp',tag:'Rond, zacht & nootachtig',description:'Groene schelpen met hazelnoot-melkchocoladeganache rondom een hart van salted caramel. Voor wie van een nootje houdt.',shell:'#a9bd90',filling:'#a16c4a',core:'#b16a28',crumbs:'#ae8049',layers:[['De vulling','Hazelnoot-melkchocoladeganache'],['De kern','Salted caramel']]},
 {id:'bounty',name:'Bounty',category:'chocolate',image:'bounty.png',tag:'Melkchocolade ontmoet kokos',description:'Zachte melkchocoladeganache rondom een kern van kokos.',shell:'#ddcab1',filling:'#98674d',core:'#f4e9d7',dipped:true,crumbs:'#f4e9d7',layers:[['De vulling','Melkchocoladeganache'],['De kern','Kokos']]},
@@ -16,38 +16,42 @@ const flavors=[
 {id:'pistache',name:'Pistache',category:'classic',image:'m3.jpeg',tag:'Een verfijnde notensmaak',description:'Een macaron gevuld met witte chocoladeganache met pistache.',shell:'#c4d0ab',filling:'#e5dfbb',crumbs:'#af9d69',layers:[['De vulling','Witte chocoladeganache met pistache']]},
 {id:'dubai-pistache',name:'Dubai Pistache',category:'chocolate dessert',image:'m2.jpeg',tag:'Fondant & Dubai pistache',description:'Fondantganache rondom een vulling van Dubai pistache. Dusted with gold, darling.',shell:'#bbcb9f',filling:'#704432',core:'#b3ad6b',gold:true,layers:[['De vulling','Fondantganache'],['De kern','Dubai pistache'],['De afwerking','Subtiele gouden glans']]}];
 const favoriteIds=['creme-brulee','brownie-original','tiramisu'];
+const t=(source,parameters)=>I18n.t(source,parameters);
 const $=s=>document.querySelector(s);
 const grid=$('#product-grid'),select=$('#flavor-select'),canvas=$('#macaron-canvas');
-flavors.forEach((f,i)=>{const card=document.createElement('button');card.className='product';card.type='button';card.dataset.category=f.category;card.dataset.flavor=f.id;card.setAttribute('aria-label',`Ontdek ${f.name}`);card.innerHTML=`<div class="product-photo"><img src="assets/products/${f.id}.webp" alt="${f.name} macaron" width="600" height="650" loading="lazy">${favoriteIds.includes(f.id)?'<span class="product-badge">EEN FAVORIET</span>':''}</div><div class="product-caption"><h3>${f.name}</h3><p>${f.tag}</p></div>`;card.addEventListener('click',()=>{choose(f.id);$('#ontdek').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});$('#view-art').focus({preventScroll:true});});grid.append(card);select.add(new Option(f.name,f.id));});
+flavors.forEach((source,i)=>{const f=I18n.localizeFlavor(source);const card=document.createElement('button');card.className='product';card.type='button';card.dataset.category=f.category;card.dataset.flavor=f.id;card.setAttribute('aria-label',t('Ontdek {name}',{name:f.name}));card.innerHTML=`<div class="product-photo"><img src="assets/products/${f.id}.webp" alt="${t('{name} macaron',{name:f.name})}" width="600" height="650" loading="lazy">${favoriteIds.includes(f.id)?'<span class="product-badge">'+t('EEN FAVORIET')+'</span>':''}</div><div class="product-caption"><h3>${f.name}</h3><p>${f.tag}</p></div>`;card.addEventListener('click',()=>{choose(f.id);$('#ontdek').scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'});$('#view-art').focus({preventScroll:true});});grid.append(card);select.add(new Option(f.name,f.id));});
 $('[data-filter="all"] span').textContent=String(flavors.length).padStart(2,'0');
 let viewer;
-function sync(){if(!viewer)return;['#open-macaron','#rotate-left','#rotate-right','#tilt','#reset-view'].forEach(s=>$(s).disabled=!viewer.supported);$('#open-macaron').setAttribute('aria-pressed',String(viewer.open));$('#open-macaron').innerHTML=viewer.open?'Sluit de macaron <span>−</span>':'Ontdek de vulling <span>＋</span>';$('#tilt').value=Math.round(viewer.pitch*180/Math.PI);}
+function sync(){if(!viewer)return;['#open-macaron','#rotate-left','#rotate-right','#tilt','#reset-view'].forEach(s=>$(s).disabled=!viewer.supported);$('#open-macaron').setAttribute('aria-pressed',String(viewer.open));$('#open-macaron').innerHTML=t(viewer.open?'Sluit de macaron <span>−</span>':'Ontdek de vulling <span>＋</span>');$('#tilt').value=Math.round(viewer.pitch*180/Math.PI);}
 viewer=new MacaronViewer(canvas,sync);
 const ownPhotoExtras={'creme-brulee':'creme-brulee-filling','hazelnoot':'hazelnoot-filling','dubai-pistache':'dubai-pistache','chunky-monkey':'chunky-monkey'};
 const ownPhotoOverrides={'pecan-pie':'pecan-pie-isolated-v2','citroen':'citroen-filled-v2','pistache':'pistache-round-v2','dubai-pistache':'dubai-pistache-closed','chunky-monkey':'chunky-monkey-closed'};
-const ownPhotoLabel=document.createElement('span');ownPhotoLabel.className='own-photo-label';ownPhotoLabel.textContent='Macaron';ownPhotoLabel.hidden=true;
+const ownPhotoLabel=document.createElement('span');ownPhotoLabel.className='own-photo-label';ownPhotoLabel.textContent=t('Macaron');ownPhotoLabel.hidden=true;
 const ownPhotoExtra=document.createElement('figure');ownPhotoExtra.className='own-photo-extra';ownPhotoExtra.hidden=true;
 const ownPhotoExtraImage=document.createElement('img');ownPhotoExtraImage.width=1200;ownPhotoExtraImage.height=1000;ownPhotoExtraImage.src='assets/photos/creme-brulee-filling.webp';
-const ownPhotoExtraCaption=document.createElement('figcaption');ownPhotoExtraCaption.textContent='Vulling';ownPhotoExtra.append(ownPhotoExtraImage,ownPhotoExtraCaption);
+const ownPhotoExtraCaption=document.createElement('figcaption');ownPhotoExtraCaption.textContent=t('Vulling');ownPhotoExtra.append(ownPhotoExtraImage,ownPhotoExtraCaption);
 
 $('.canvas-wrap').append(ownPhotoLabel,ownPhotoExtra);
-const fillingLabel=document.createElement('span');fillingLabel.className='filling-label';fillingLabel.textContent='Zonder bovenste schelp';fillingLabel.hidden=true;
+const fillingLabel=document.createElement('span');fillingLabel.className='filling-label';fillingLabel.textContent=t('Zonder bovenste schelp');fillingLabel.hidden=true;
 const cutFigure=document.createElement('figure');cutFigure.className='section-photo';cutFigure.hidden=true;
-const cutImage=document.createElement('img');cutImage.width=900;cutImage.height=600;cutImage.src='assets/sections/creme-brulee.webp';cutImage.alt='Dwarsdoorsnede van Crème Brûlée';
-const cutCaption=document.createElement('figcaption');cutCaption.textContent='Dwarsdoorsnede';
+const cutImage=document.createElement('img');cutImage.width=900;cutImage.height=600;cutImage.src='assets/sections/creme-brulee.webp';cutImage.alt=t('Dwarsdoorsnede van {name}',{name:'Crème Brûlée'});
+const cutCaption=document.createElement('figcaption');cutCaption.textContent=t('Dwarsdoorsnede');
 cutFigure.append(cutImage,cutCaption);
 $('.canvas-wrap').append(fillingLabel,cutFigure);
 const modelShadow=document.createElement('div');modelShadow.className='model-shadow';modelShadow.setAttribute('aria-hidden','true');modelShadow.hidden=true;$('.canvas-wrap').prepend(modelShadow);
 
+let currentPhotoMode='art';
 function photoMode(mode){
-  const photo=mode!==false,art=mode==='art',f=flavors.find(x=>x.id===select.value)||flavors[2];
+  currentPhotoMode=mode;
+  const source=flavors.find(x=>x.id===select.value)||flavors[2];
+  const photo=mode!==false,art=mode==='art',f=I18n.localizeFlavor(source);
   const filling=mode==='filling'&&Boolean(f.core||f.chunks);
 
   canvas.hidden=photo;
   $('.canvas-wrap').classList.toggle('filling-pair',filling);
   $('.canvas-wrap').classList.toggle('is-model',!photo);
   fillingLabel.hidden=!filling;cutFigure.hidden=!filling;modelShadow.hidden=photo;
-  if(filling){cutImage.src='assets/sections/'+f.id+'.webp';cutImage.alt=f.name+' verticaal doorgesneden met beide schelpen, '+f.layers.filter(x=>x[0]!=='De afwerking').map(x=>x[1]).join(' en ');}
+  if(filling){cutImage.src='assets/sections/'+f.id+'.webp';cutImage.alt=t('{name} verticaal doorgesneden met beide schelpen, {layers}',{name:f.name,layers:source.layers.filter(x=>x[0]!=='De afwerking').map(x=>t(x[1])).join(t(' en '))});}
 
   if(viewer.fallback)viewer.fallback.hidden=photo||viewer.supported;
   $('#reference-photo').hidden=!photo;$('#model-controls').hidden=photo;$('#drag-hint').hidden=photo;
@@ -57,19 +61,27 @@ function photoMode(mode){
   $('#view-filling').setAttribute('aria-pressed',String(filling));
   const extra=mode===true&&ownPhotoExtras[f.id];
   $('.canvas-wrap').classList.toggle('own-photo-pair',Boolean(extra));ownPhotoExtra.hidden=!extra;ownPhotoLabel.hidden=!extra;
-  if(extra){ownPhotoExtraImage.src='assets/photos/'+extra+'.webp';ownPhotoExtraImage.alt='Open product: '+f.name+' met zichtbare vulling';}
+  if(extra){ownPhotoExtraImage.src='assets/photos/'+extra+'.webp';ownPhotoExtraImage.alt=t('Open product: {name} met zichtbare vulling',{name:f.name});}
   $('#reference-photo').src=filling?'assets/fillings/'+(f.fillingImage||f.id+'.png'):art?'assets/products/'+f.id+'.webp':'assets/photos/'+(ownPhotoOverrides[f.id]||f.id)+'.webp';
-  $('#reference-photo').alt=(filling?'Voorstelling zonder bovenste schelp, met zichtbare vulling van ':art?'Voorstelling van ':'Product: ')+f.name;
-  if(mode===true&&f.ownPhotoContext){$('#reference-photo').alt=f.ownPhotoAlt||f.ownPhotoContext;ownPhotoLabel.textContent=f.ownPhotoContext;ownPhotoLabel.hidden=false;}else ownPhotoLabel.textContent='Macaron';
+  $('#reference-photo').alt=t(filling?'Voorstelling zonder bovenste schelp, met zichtbare vulling van {name}':art?'Voorstelling van {name}':'Product: {name}',{name:f.name});
+  if(mode===true&&f.ownPhotoContext){$('#reference-photo').alt=f.ownPhotoAlt||f.ownPhotoContext;ownPhotoLabel.textContent=f.ownPhotoContext;ownPhotoLabel.hidden=false;}else ownPhotoLabel.textContent=t('Macaron');
   if(!photo)viewer.draw();
 }
-function choose(id){const f=flavors.find(x=>x.id===id)||flavors[2];select.value=f.id;$('#flavor-name').textContent=f.name;$('#flavor-family').textContent=favoriteIds.includes(f.id)?'Onze dessertfavoriet':'Homemade macaron';$('#flavor-description').textContent=f.description;$('#viewer-index').textContent=`${String(flavors.indexOf(f)+1).padStart(2,'0')} / ${flavors.length}`;$('#reference-photo').src=`assets/${f.image}`;$('#reference-photo').alt=`Echte productfoto van ${f.name}`;$('#filling-details').innerHTML=f.layers.map(([name,detail],i)=>`<div class="filling-row"><span class="layer-number">0${i+1}</span><div><strong>${name}</strong><p>${detail}</p></div></div>`).join('');canvas.setAttribute('aria-label',`${f.name}, draaibaar 3D-model. Pijltjestoetsen draaien; Enter opent de macaron. Vulling: ${f.layers.map(x=>x[1]).join(', ')}.`);$('#view-filling').hidden=!(f.core||f.chunks);viewer.setFlavor(f);photoMode('art');}
+function renderFlavorDetails(source){const f=I18n.localizeFlavor(source);$('#flavor-name').textContent=f.name;$('#flavor-family').textContent=t(favoriteIds.includes(f.id)?'Onze dessertfavoriet':'Homemade macaron');$('#flavor-description').textContent=f.description;$('#viewer-index').textContent=`${String(flavors.indexOf(source)+1).padStart(2,'0')} / ${flavors.length}`;$('#filling-details').innerHTML=f.layers.map(([name,detail],i)=>`<div class="filling-row"><span class="layer-number">0${i+1}</span><div><strong>${name}</strong><p>${detail}</p></div></div>`).join('');canvas.setAttribute('aria-label',t('{name}, draaibaar 3D-model. Pijltjestoetsen draaien; Enter opent de macaron. Vulling: {layers}.',{name:f.name,layers:f.layers.map(x=>x[1]).join(', ')}));$('#view-filling').hidden=!(f.core||f.chunks);}
+function choose(id){const f=flavors.find(x=>x.id===id)||flavors[2];select.value=f.id;renderFlavorDetails(f);viewer.setFlavor(f);photoMode('art');}
 select.addEventListener('change',()=>choose(select.value));$('#view-model').addEventListener('click',()=>photoMode(false));$('#view-photo').addEventListener('click',()=>photoMode(true));$('#open-macaron').addEventListener('click',()=>viewer.toggle());$('#rotate-left').addEventListener('click',()=>viewer.rotate(-Math.PI/6));$('#rotate-right').addEventListener('click',()=>viewer.rotate(Math.PI/6));$('#reset-view').addEventListener('click',()=>viewer.reset());$('#tilt').addEventListener('input',e=>{viewer.pitch=Number(e.target.value)*Math.PI/180;viewer.draw();});
-document.querySelectorAll('[data-filter]').forEach(button=>button.addEventListener('click',()=>{document.querySelectorAll('[data-filter]').forEach(b=>{const active=b===button;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});let count=0;grid.querySelectorAll('.product').forEach(card=>{const visible=button.dataset.filter==='all'||card.dataset.category.split(' ').includes(button.dataset.filter);card.hidden=!visible;if(visible)count++;});$('#filter-status').textContent=`${count} smaken zichtbaar`; }));
+document.querySelectorAll('[data-filter]').forEach(button=>button.addEventListener('click',()=>{document.querySelectorAll('[data-filter]').forEach(b=>{const active=b===button;b.classList.toggle('active',active);b.setAttribute('aria-pressed',String(active));});let count=0;grid.querySelectorAll('.product').forEach(card=>{const visible=button.dataset.filter==='all'||card.dataset.category.split(' ').includes(button.dataset.filter);card.hidden=!visible;if(visible)count++;});$('#filter-status').textContent=t('{count} smaken zichtbaar',{count}); }));
 const menu=$('.menu-toggle'),nav=$('#navigation');function closeMenu(){menu.setAttribute('aria-expanded','false');nav.classList.remove('open');}menu.addEventListener('click',()=>{const open=menu.getAttribute('aria-expanded')!=='true';menu.setAttribute('aria-expanded',String(open));nav.classList.toggle('open',open);});nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',closeMenu));document.addEventListener('keydown',e=>{if(e.key==='Escape'&&nav.classList.contains('open')){closeMenu();menu.focus();}});document.addEventListener('click',e=>{if(!e.target.closest('.header'))closeMenu();});
 $('#year').textContent=new Date().getFullYear();choose('creme-brulee');
 
 $('#view-art').addEventListener('click',()=>photoMode('art'));
 $('#view-filling').addEventListener('click',()=>photoMode('filling'));
 
+document.addEventListener('languagechange',()=>{
+  flavors.forEach((source,index)=>{const f=I18n.localizeFlavor(source),card=grid.querySelector('[data-flavor="'+f.id+'"]');card.setAttribute('aria-label',t('Ontdek {name}',{name:f.name}));card.querySelector('img').alt=t('{name} macaron',{name:f.name});card.querySelector('h3').textContent=f.name;card.querySelector('.product-caption p').textContent=f.tag;const badge=card.querySelector('.product-badge');if(badge)badge.textContent=t('EEN FAVORIET');select.options[index].textContent=f.name;});
+  ownPhotoExtraCaption.textContent=t('Vulling');fillingLabel.textContent=t('Zonder bovenste schelp');cutCaption.textContent=t('Dwarsdoorsnede');
+  renderFlavorDetails(flavors.find(f=>f.id===select.value));photoMode(currentPhotoMode);sync();
+  if(viewer.fallback)viewer.fallback.alt=t('Productvoorstelling. Draaien is niet beschikbaar in deze browser.');
+  $('#filter-status').textContent=t('{count} smaken zichtbaar',{count:grid.querySelectorAll('.product:not([hidden])').length});
+});
 
