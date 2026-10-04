@@ -1,6 +1,7 @@
 /* Complete Dutch, English and French copy. Order: nl, en, fr. */
 window.KMCTranslations = {
   "copy": {
+    "favoritesFilter": ["Favorieten", "Favourites", "Coups de cœur"],
     "copy0": [
       "Kiss My Cookie — Kleine kunstwerkjes. Groots genieten.",
       "Kiss My Cookie — Little works of art. Pure delight.",
@@ -73,8 +74,8 @@ window.KMCTranslations = {
     ],
     "copy14": [
       "Van verfijnde macarons tot brownies, koekjes en cupcakes.<br> Met de hand gemaakt, voor jouw zoete zonde.",
-      "From delicate macarons to brownies, cookies and cupcakes.<br> Handmade for your sweet moment.",
-      "Des macarons délicats aux brownies, biscuits et cupcakes.<br> Faits à la main pour votre pause gourmande."
+      "From delicate macarons to brownies, cookies and cupcakes.<br> Handmade for your sweet indulgence.",
+      "Des macarons délicats aux brownies, biscuits et cupcakes.<br> Faits à la main pour votre péché gourmand."
     ],
     "copy15": [
       "Ontdek de collectie",
@@ -172,9 +173,9 @@ window.KMCTranslations = {
       "Inspirés de desserts"
     ],
     "copy34": [
-      "Onze smaken: Speculaas, Red Velvet, Crème Brûlée, Salty Sweet Hazel, Bounty, Pecan Pie, The 'Lion', The 'Oreo', Brownie, Fondant, Chunky Monkey, Tiramisu, Aardbei, Citroen, Pistache en Dubai Pistache. Activeer JavaScript voor de interactieve collectie.",
-      "Our flavours: Speculoos, Red Velvet, Crème Brûlée, Salty Sweet Hazel, Bounty, Pecan Pie, The 'Lion', The 'Oreo', Brownie, Fondant, Chunky Monkey, Tiramisu, Strawberry, Lemon, Pistachio and Dubai Pistachio. Enable JavaScript to explore the interactive collection.",
-      "Nos saveurs : Spéculoos, Red Velvet, Crème Brûlée, Salty Sweet Hazel, Bounty, Pecan Pie, The 'Lion', The 'Oreo', Brownie, Fondant, Chunky Monkey, Tiramisu, Fraise, Citron, Pistache et Pistache Dubaï. Activez JavaScript pour explorer la collection interactive."
+      "Onze smaken: Speculaas, Red Velvet, Crème Brûlée, Salty Sweet Hazel, The 'Bounty', The 'Lion', The 'Oreo', Pecan Pie, Brownie, Fondant, Chunky Monkey, Tiramisu, Aardbei, Citroen, Pistache en Dubai Pistache. Activeer JavaScript voor de interactieve collectie.",
+      "Our flavours: Biscoff, Red Velvet, Crème Brûlée, Salty Sweet Hazel, The 'Bounty', The 'Lion', The 'Oreo', Pecan Pie, Brownie, Fondant, Chunky Monkey, Tiramisu, Strawberry, Lemon, Pistachio and Dubai Pistachio. Enable JavaScript to explore the interactive collection.",
+      "Nos saveurs : Spéculoos, Red Velvet, Crème Brûlée, Salty Sweet Hazel, The 'Bounty', The 'Lion', The 'Oreo', Pecan Pie, Brownie, Fondant, Chunky Monkey, Tiramisu, Fraise, Citron, Pistache et Pistache Dubaï. Activez JavaScript pour explorer la collection interactive."
     ],
     "copy35": [
       "Het aanbod wisselt per bakronde.",
@@ -877,7 +878,7 @@ window.KMCTranslations = {
       "Nous enregistrons uniquement la langue choisie (néerlandais, anglais ou français) localement dans votre navigateur, pour vous éviter de la sélectionner à nouveau lors de votre prochaine visite. Cette préférence ne nous est pas transmise. Si votre navigateur bloque le stockage, le choix de langue reste disponible pour la page en cours."
     ],
     "Speculaas": [
-      "Speculoos",
+      "Biscoff",
       "Spéculoos"
     ],
     "Red Velvet": [
@@ -888,9 +889,9 @@ window.KMCTranslations = {
       "Salty Sweet Hazel",
       "Salty Sweet Hazel"
     ],
-    "Bounty": [
-      "Bounty",
-      "Bounty"
+    "The 'Bounty'": [
+      "The 'Bounty'",
+      "The 'Bounty'"
     ],
     "The 'Lion'": [
       "The 'Lion'",
@@ -941,7 +942,7 @@ window.KMCTranslations = {
       "Un classique épicé"
     ],
     "Speculaas in twee texturen. Een zachte witte chocoladeganache met speculaas rondom een hart van speculaaspasta.": [
-      "Speculoos in two textures. A smooth white chocolate and speculoos ganache around a centre of speculoos spread.",
+      "Biscoff in two textures. A smooth white chocolate and Biscoff ganache around a centre of Biscoff spread.",
       "Le spéculoos en deux textures. Une douce ganache au chocolat blanc et au spéculoos autour d’un cœur de pâte de spéculoos."
     ],
     "De vulling": [
@@ -965,11 +966,11 @@ window.KMCTranslations = {
       "La touche croquante"
     ],
     "Witte chocoladeganache met speculaas": [
-      "White chocolate and speculoos ganache",
+      "White chocolate and Biscoff ganache",
       "Ganache au chocolat blanc et au spéculoos"
     ],
     "Speculaaspasta": [
-      "Speculoos spread",
+      "Biscoff spread",
       "Pâte de spéculoos"
     ],
     "Zacht met karakter": [
