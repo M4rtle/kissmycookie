@@ -297,8 +297,8 @@ window.KMCTranslations = {
       "Tarte aux noix de pécan"
     ],
     "copy59": [
-      "Zandachtige bodem. Kleverige pecanlaag.",
-      "A crumbly biscuit base. A gooey pecan topping.",
+      "Zandkoekbodem. Kleverige pecanlaag.",
+      "A shortbread base. A gooey pecan topping.",
       "Une base sablée. Une garniture fondante aux noix de pécan."
     ],
     "copy60": [
@@ -677,8 +677,8 @@ window.KMCTranslations = {
       "Illustration d’un carré de brownie et d’une petite bouchée"
     ],
     "copy135": [
-      "Voorstelling van pecan pie met koekjesbodem en gekaramelliseerde pecannoten",
-      "Illustration of pecan pie with a biscuit base and caramelised pecans",
+      "Voorstelling van pecan pie met zandkoekbodem en gekaramelliseerde pecannoten",
+      "Illustration of pecan pie with a shortbread base and caramelised pecans",
       "Illustration d’une tarte aux noix de pécan avec une base biscuitée et des noix caramélisées"
     ],
     "copy136": [
@@ -1348,12 +1348,12 @@ window.KMCTranslations = {
       "Also available alongside macarons",
       "Aussi pour accompagner les macarons"
     ],
-    "Een zandachtige koekjesbodem met daarboven een kleverige laag van gekaramelliseerde suiker en pecannoten. In kleine vierkantjes tussen de macarons of als bars voor een eigen zoet moment.": [
-      "A crumbly biscuit base topped with a gooey layer of caramelised sugar and pecans. In little squares nestled among macarons or as bars for a sweet moment of your own.",
+    "Een zandkoekbodem met daarboven een kleverige laag van gekaramelliseerde suiker en pecannoten. In kleine vierkantjes tussen de macarons of als bars voor een eigen zoet moment.": [
+      "A shortbread base topped with a gooey layer of caramelised sugar and pecans. In little squares nestled among macarons or as bars for a sweet moment of your own.",
       "Une base biscuitée sablée surmontée d’une couche fondante de sucre caramélisé et de noix de pécan. En petits carrés entre les macarons ou en barres pour votre propre pause gourmande."
     ],
-    "Voorstelling van een pecan-piebar en een vierkantje met zandachtige koekjesbodem en kleverige pecanlaag": [
-      "Illustration of a pecan pie bar and square with a crumbly biscuit base and gooey pecan topping",
+    "Voorstelling van een pecan-piebar en een vierkantje met zandkoekbodem en kleverige pecanlaag": [
+      "Illustration of a pecan pie bar and square with a shortbread base and gooey pecan topping",
       "Illustration d’une barre et d’un carré de tarte aux noix de pécan avec une base sablée et une garniture fondante aux noix de pécan"
     ],
     "Doos met macarons, brownies en een pecan-pievierkantje": [
@@ -1368,8 +1368,8 @@ window.KMCTranslations = {
       "The layers",
       "Les couches"
     ],
-    "Zandachtige koekjesbodem · kleverige suiker- en pecanlaag": [
-      "Crumbly biscuit base · gooey sugar and pecan topping",
+    "Zandkoekbodem · kleverige suiker- en pecanlaag": [
+      "Shortbread base · gooey sugar and pecan topping",
       "Base biscuitée sablée · garniture fondante au sucre et aux noix de pécan"
     ],
     "Vanille- en chocoladekoekjes in allerlei vormen en formaten, met speelse motieven uit ons atelier. We maken ook custom shapes op aanvraag.": [
