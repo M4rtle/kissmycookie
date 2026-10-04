@@ -1,0 +1,25 @@
+/* Additional owner photography. Existing design and text remain intact. */
+.warmth-ribbon{max-width:1440px;margin:0 auto;padding:42px 5.5% 10px;display:grid;grid-template-columns:1fr 1.6fr 1fr;gap:24px;align-items:center}
+.warmth-frame{margin:0;min-width:0;padding:8px;background:#fffaf0;border:1px solid #eadcca;box-shadow:0 8px 24px #5838220c;border-radius:3px}
+.warmth-frame img{width:100%;height:100%;object-fit:cover;border-radius:1px}
+.warmth-ribbon .warmth-frame{height:250px}
+.warmth-taste{transform:rotate(-3deg)}
+.warmth-batch{transform:rotate(1deg)}
+.warmth-box{transform:rotate(-2deg)}
+.warmth-sweets{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:34px}
+.warmth-sweets .warmth-frame{height:230px}
+.warmth-sweets .warmth-frame:first-child{transform:rotate(-1deg)}
+.warmth-sweets .warmth-frame:last-child{transform:rotate(1deg)}
+.warmth-atelier{display:grid;grid-template-columns:1fr 1fr;gap:15px;margin-top:30px;max-width:480px}
+.warmth-atelier .warmth-frame{height:155px;padding:6px}
+.warmth-atelier .warmth-frame:first-child{transform:rotate(-2deg)}
+.warmth-atelier .warmth-frame:last-child{transform:rotate(2deg)}
+@media(min-width:1600px){.warmth-ribbon{padding-left:0;padding-right:0}}
+@media(max-width:700px){.warmth-ribbon{padding:28px 6% 4px;gap:12px;grid-template-columns:1fr 1fr}.warmth-ribbon .warmth-frame{height:185px;padding:5px}.warmth-ribbon .warmth-batch{grid-column:1 / -1;grid-row:2;height:150px}.warmth-sweets{gap:14px;margin-top:26px}.warmth-sweets .warmth-frame{height:150px;padding:5px}.warmth-atelier{gap:12px;max-width:none}.warmth-atelier .warmth-frame{height:140px;padding:5px}}
+@media(prefers-reduced-motion:reduce){.warmth-frame{transform:none}}
+.warmth-taste img{object-position:center 70%}
+
+/* Extra owner photo of the stamped face cookies. */
+.warmth-sweets .warmth-smileys{grid-column:1 / -1;width:min(100%,760px);justify-self:center;height:auto;transform:rotate(-1deg)}
+.warmth-sweets .warmth-smileys img{height:auto;aspect-ratio:1100 / 488}
+.sweet-detail-photo #sweet-smiley-photo{height:auto;aspect-ratio:1100 / 488;object-fit:cover;margin-top:22px;border:6px solid #fffaf0;border-radius:3px}

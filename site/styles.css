@@ -47,3 +47,99 @@
 /* Center the secondary link beneath the collection button. */
 .hero-actions{display:grid;width:max-content;max-width:100%;text-align:center;gap:20px}
 .hero-copy .hero-actions .quiet-link{display:block;margin:0}
+
+
+/* Local 2026 logo and paired product sections. */
+.brand-lockup img,.signature img,.brand img,.footer-logo img{object-fit:contain;border-radius:8px;aspect-ratio:1}
+.brand-lockup img{height:76px}.signature img{height:125px}
+.footer-logo{display:flex;align-items:center;gap:14px}.footer-logo>img{width:64px;height:64px;flex:none}
+footer .footer-wordmark{font-size:25px;letter-spacing:-1px;margin:0}footer .footer-wordmark>span{font-size:7px;letter-spacing:.18em}
+.canvas-wrap.filling-pair{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto;gap:0 16px;height:390px;padding-top:20px}
+.canvas-wrap.filling-pair:before{display:none}
+.filling-pair #reference-photo{position:static;grid-column:1;grid-row:1;width:100%;height:100%;min-height:0;padding:0;object-fit:contain}
+.filling-label{grid-column:1;grid-row:2;text-align:center;font-size:11px;color:var(--muted);padding:10px 0}
+.section-photo{grid-column:2;grid-row:1 / 3;margin:0;min-width:0;display:flex;flex-direction:column}
+.section-photo img{width:100%;height:0;min-height:0;flex:1;object-fit:contain}
+.section-photo figcaption{font-size:11px;color:var(--muted);text-align:center;padding:10px 0}
+
+.hero-showcase .hero-viewer.hero-filling-pair{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:10px}
+.hero-filling-pair #hero-photo{height:auto}
+#hero-cut{margin:0;min-width:0}#hero-cut img{width:100%;height:auto;filter:drop-shadow(0 14px 15px #08276833)}
+#hero-cut figcaption{text-align:center;font-size:10px;color:#ebf2ff;margin-top:6px}
+.canvas-wrap.is-model{background:radial-gradient(ellipse at 45% 36%,#fffefa 0%,#f5f7fb 55%,#e6edf6 100%);border-radius:18px;isolation:isolate;overflow:hidden}
+.canvas-wrap.is-model:before{display:none}
+.model-shadow{position:absolute;left:22%;right:22%;bottom:14%;height:8%;border-radius:50%;background:radial-gradient(ellipse,#49342245 0%,#68523c20 40%,transparent 72%);filter:blur(7px);transform:scaleX(var(--shadow-width,1));opacity:var(--shadow-opacity,.8);pointer-events:none;z-index:-1}
+.canvas-wrap canvas{z-index:1}
+@media(max-width:700px){
+ .brand-lockup img{height:61px}.signature img{height:107px}
+ .canvas-wrap.filling-pair{height:auto;grid-template-columns:minmax(0,1fr);grid-template-rows:215px auto auto;gap:0;padding-top:8px}
+ .filling-label{grid-row:2}.section-photo{grid-column:1;grid-row:3}.section-photo img{flex:none;height:215px}
+ .hero-showcase:has(.hero-filling-pair){width:94%}
+}
+@media(max-width:360px){.brand-lockup img{height:53px}.canvas-wrap.filling-pair{grid-template-rows:190px auto auto}.section-photo img{height:190px}}
+
+/* Cookies & sweets: real atelier photos and a separate collection. */
+.sweets-category-line{display:flex;justify-content:space-between;gap:20px;padding:12px 0 20px;margin-bottom:30px;border-bottom:1px solid var(--line);font-size:11px;color:var(--muted)}.sweets-category-line a{color:var(--blue)}
+.sweets-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:22px}.sweet-card{min-width:0;display:block}.sweet-photo{position:relative;aspect-ratio:1/1.08;overflow:hidden;background:var(--cream);border-radius:22px}.sweet-photo img{width:100%;height:100%;object-fit:cover;transition:transform .6s}.sweet-card:hover .sweet-photo img{transform:scale(1.045)}.sweet-badge{position:absolute;top:15px;left:15px;padding:5px 10px;border-radius:20px;background:var(--blue);color:white;font-size:9px;letter-spacing:.08em}.sweet-caption{padding:18px 0;border-bottom:1px solid var(--line)}.sweet-caption h3{font-family:Serif,Georgia,serif;font-size:27px;line-height:1.2}.sweet-caption p{font-size:11px;color:var(--muted);margin-top:8px}.sweet-discover{display:flex;justify-content:space-between;align-items:center;color:var(--blue);font-size:11px;margin-top:17px}.sweet-discover>span{font-size:19px}.sweet-detail-photo{margin:22px 0 0}.sweet-detail-photo img{width:100%;height:370px;object-fit:contain;border-radius:16px;background:#fff4e4}.sweet-detail-photo figcaption{text-align:center;font-size:10px;color:var(--muted);padding:15px 6px 0}.sweet-viewer .viewer-top{gap:12px}.mixed-box-photo{position:relative;min-width:0}.mixed-box-photo img{width:100%;height:500px;object-fit:cover;border-radius:24px}.mixed-box-photo>span{display:block;color:var(--muted);font-size:11px;margin-top:15px}.mixed-boxes .text-link{display:inline-block;margin-top:24px}.header nav{gap:24px}
+@media(max-width:1100px){.header nav{gap:14px;font-size:12px}.sweets-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:32px 22px}.sweet-detail-photo img{height:320px}.mixed-box-photo img{height:420px}}
+@media(min-width:701px) and (max-width:900px){.header{padding-inline:3%}.brand-lockup>span{font-size:18px}.brand-lockup img{width:55px}.header nav{gap:10px;font-size:11px}.nav-cta{padding:10px 12px}}
+@media(max-width:700px){.sweets-category-line{align-items:flex-start;font-size:10px;gap:14px}.sweets-category-line a{text-align:right;max-width:155px}.sweets-grid{gap:26px 15px}.sweet-caption h3{font-size:23px}.sweet-caption p{font-size:10px}.sweet-badge{top:10px;left:10px;font-size:8px}.sweet-photo{border-radius:16px}.sweet-viewer .viewer-top{font-size:9px}.sweet-viewer .view-tabs button{padding:7px 9px;font-size:10px}.sweet-detail-photo img{height:290px}.mixed-box-photo img{height:auto;aspect-ratio:1;object-fit:cover}.mixed-boxes .story-copy{padding-top:10px}}
+@media(prefers-reduced-motion:reduce){.sweet-photo img{transition:none}}
+
+
+
+
+.sweet-caption p{min-height:3.4em}
+
+/* A brief welcome, with the normal homepage ready underneath. */
+.welcome-intro{position:fixed;inset:0;width:100%;height:100dvh;max-width:none;max-height:none;margin:0;padding:24px;border:0;background:var(--paper);color:var(--ink);overflow:auto;opacity:1;transition:opacity .55s ease}
+.welcome-intro[open]{display:grid;place-items:center}
+.welcome-intro::backdrop{background:var(--paper);transition:opacity .55s ease}
+.welcome-intro.is-closing,.welcome-intro.is-closing::backdrop{opacity:0}
+.welcome-content{width:min(100%,880px);text-align:center;padding:20px 0}
+.welcome-brand{position:relative;width:clamp(210px,30vh,320px);max-width:100%;aspect-ratio:1;margin:0 auto 30px;background:transparent}
+.welcome-brand video,.welcome-logo-fallback{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:transparent}
+.welcome-brand video{visibility:hidden}
+.welcome-brand.is-playing video{visibility:visible}
+.welcome-brand.is-playing .welcome-logo-fallback{visibility:hidden}
+.welcome-content>.eyebrow{color:var(--blue);font-size:9px;margin-bottom:22px}
+.welcome-title{font-size:clamp(30px,3.7vw,54px);line-height:1.16}
+.welcome-title>span,.welcome-title>em{display:block}
+.welcome-taste{margin-top:12px;transition:opacity .65s ease,transform .65s ease}
+.welcome-intro.is-introducing .welcome-taste{opacity:0;transform:translateY(8px);transition:none}
+.welcome-skip{display:inline-block;margin-top:36px;padding:10px 0;border:0;background:transparent;color:var(--muted);font-size:11px;letter-spacing:.04em;text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:6px;transition:color .2s,text-decoration-color .2s}
+.welcome-intro:focus{outline:none}
+.welcome-skip:hover,.welcome-skip:focus-visible{color:var(--blue);text-decoration-color:var(--blue)}
+.welcome-skip:focus-visible{outline:none;text-decoration-thickness:2px}
+body.has-welcome{overflow:hidden}
+@media(max-width:700px){.welcome-intro{padding:24px}.welcome-brand{width:min(240px,30dvh);margin-bottom:25px}.welcome-content>.eyebrow{font-size:8px;letter-spacing:.13em}.welcome-title{font-size:clamp(29px,7.8vw,40px)}.welcome-skip{margin-top:28px}}
+@media(max-height:600px){.welcome-content{padding:0}.welcome-brand{width:min(150px,26dvh);margin-bottom:12px}.welcome-content>.eyebrow{margin-bottom:14px}.welcome-title{font-size:30px}.welcome-skip{margin-top:16px}}
+
+/* Productvoorstellingen en eigen verpakkingsfoto’s voor sweets. */
+.sweet-photo.sweet-art{background:radial-gradient(ellipse at center,#fffaf1 0%,#f4e6d0 100%)}
+.sweet-photo.sweet-art img{object-fit:contain;padding:22px;filter:drop-shadow(0 14px 12px #4d29151c)}
+.sweet-detail-photo img.is-art{padding:24px;background:radial-gradient(ellipse at center,#fffaf1 0%,#f4e6d0 100%)}
+.sweet-viewer .viewer-top{flex-wrap:wrap;gap:12px}
+.sweet-viewer .view-tabs{flex-wrap:wrap}
+.sweet-viewer .view-tabs button[hidden]{display:none}
+@media(max-width:700px){.sweet-photo.sweet-art img{padding:14px}.sweet-viewer .view-tabs{width:100%;justify-content:flex-start}.sweet-viewer .view-tabs button{flex:1;padding:8px 6px;font-size:10px}.sweet-detail-photo img.is-art{padding:18px}}
+
+/* Collectiekeuze op de regel boven de titel. */
+.collection-tabs{display:flex;align-items:center;flex-wrap:wrap;gap:24px;margin-bottom:24px;font-size:10px;letter-spacing:.15em;font-weight:500;line-height:1.5;text-transform:uppercase}
+.collection-tabs a{display:inline-flex;align-items:center;min-height:32px;padding:4px 0;border-bottom:1px solid transparent;color:var(--muted);transition:color .2s,border-color .2s}
+.collection-tabs a[aria-current="location"]{color:var(--ink);border-bottom-color:#2556d8}
+.collection-tabs a:hover{color:#2556d8;border-bottom-color:#2556d8}
+@media(max-width:360px){.collection-tabs{gap:18px;font-size:9px;letter-spacing:.1em}}
+
+/* Wisselende favorieten bovenaan. */
+.hero-interaction .hero-favorite-controls{display:flex;align-items:center;justify-content:center;gap:10px}
+.hero-interaction #hero-pause{display:block;margin:10px auto 0;min-width:0;height:auto;padding:4px 8px;border:0;background:transparent;color:#e5edff;font-size:10px;text-decoration:underline;text-underline-offset:3px}
+.hero-favorite-controls button:focus-visible,#hero-pause:focus-visible{outline:2px solid white;outline-offset:4px}
+
+/* Replay the atelier signature without changing the surrounding layout. */
+.signature .atelier-logo{position:relative;width:125px;height:125px;flex:none}
+.signature .atelier-logo video,.signature .atelier-logo img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:transparent}
+.atelier-logo video{visibility:hidden}
+.atelier-logo.is-playing video{visibility:visible}
+.atelier-logo.is-playing img{visibility:hidden}
+@media(max-width:700px){.signature .atelier-logo{width:107px;height:107px}}

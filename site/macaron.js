@@ -29,9 +29,21 @@ class MacaronViewer {
     vec3 pos=rx*ry*p;vNormal=rx*ry*n;vLocalNormal=aNormal;vWorld=aPosition;vUv=aUv;vMaterial=aMaterial;
     pos.y-=uOpen*.31;float d=5.-pos.z;gl_Position=vec4(pos.x*uScale.x*5.,pos.y*uScale.y*5.,d*1.01005-.201005,d);}`;
     const fragment=`precision highp float;
-    uniform sampler2D uTexture;uniform sampler2D uSmoothShell;uniform vec3 uShell;uniform vec3 uFilling;uniform vec3 uCore;uniform vec3 uCrumb;uniform vec3 uDipColor;uniform vec2 uDipDirection;uniform vec3 uPearl0;uniform vec3 uPearl1;uniform vec3 uPearl2;uniform float uLoaded;uniform float uDipped;uniform float uVanilla;uniform float uGold;uniform float uPhoto;uniform float uCreme;uniform float uMarble;uniform float uCocoa;uniform float uPart;
+    uniform float uCookieFlecks;uniform float uTopDip;uniform float uOpen;uniform sampler2D uTexture;uniform sampler2D uSmoothShell;uniform vec3 uShell;uniform vec3 uFilling;uniform vec3 uCore;uniform vec3 uCrumb;uniform vec3 uDipColor;uniform vec2 uDipDirection;uniform vec3 uPearl0;uniform vec3 uPearl1;uniform vec3 uPearl2;uniform float uLoaded;uniform float uDipped;uniform float uVanilla;uniform float uGold;uniform float uPhoto;uniform float uCreme;uniform float uMarble;uniform float uCocoa;uniform float uPart;
     varying vec3 vNormal;varying vec3 vLocalNormal;varying vec3 vWorld;varying vec2 vUv;varying float vMaterial;
-    float hash(vec3 p){return fract(sin(dot(p,vec3(127.1,311.7,74.7)))*43758.5453);}
+
+// Cook-Torrance studio response, evaluated in linear light.
+float ggx(vec3 n,vec3 l,float roughness){
+ vec3 v=vec3(0.,0.,1.),h=normalize(l+v);
+ float nl=max(.001,dot(n,l)),nv=max(.001,dot(n,v)),nh=max(.001,dot(n,h)),vh=max(0.,dot(v,h));
+ float a=roughness*roughness,a2=a*a,d=nh*nh*(a2-1.)+1.;
+ float distribution=a2/(3.14159265*d*d);
+ float k=pow(roughness+1.,2.)/8.;
+ float geometry=nl/(nl*(1.-k)+k)*nv/(nv*(1.-k)+k);
+ float fresnel=.035+.965*pow(1.-vh,5.);
+ return min(1.8,distribution*geometry*fresnel/(4.*nl*nv))*nl;
+}
+float hash(vec3 p){return fract(sin(dot(p,vec3(127.1,311.7,74.7)))*43758.5453);}
     float footRandom(vec2 cell,float seed){float h=mod(cell.x*17.+cell.y*131.+seed*37.,251.);return mod(h*h*13.+h*17.,251.)/251.;}
     float footPore(vec2 uv){
       vec2 cell=floor(uv);float pore=0.;
@@ -52,6 +64,8 @@ class MacaronViewer {
       // Chunky Monkey has a smooth fondant chocolate center.
       if(m>2.5&&m<3.5&&uMarble>.5&&uMarble<1.5)return uCore;
       if(m>5.5){
+        if(m>17.5)return vec3(.48,.20,.065)*(.94+.06*hash(floor(p*170.)));
+        if(m>16.5)return vec3(.97,.92,.79)*(.91+.09*hash(floor(p*310.)));
         if(m<6.5)return vec3(.19,.075,.037);
         if(m<7.5)return vec3(.35,.17,.085);
         if(m<8.5)return vec3(.99,.94,.78);
@@ -66,7 +80,7 @@ class MacaronViewer {
       vec2 origin=vec2(.5,0.),extent=vec2(.5,.37);
       if(m>2.5&&m<3.5){origin=uCreme>.5?vec2(0.,.66):vec2(.5,.5);extent=uCreme>.5?vec2(.5,.34):vec2(.5,.5);}
       vec3 shell=photoPatch(p.yz*1.1+.23,origin,extent)*w.x+photoPatch(p.xz*1.1+.31,origin,extent)*w.y+photoPatch(p.xy*1.1+.41,origin,extent)*w.z;
-      if(m<1.5){shell=texture2D(uSmoothShell,fract(p.yz*.75+.23)).rgb*w.x+texture2D(uSmoothShell,fract(p.xz*.75+.31)).rgb*w.y+texture2D(uSmoothShell,fract(p.xy*.75+.41)).rgb*w.z;if(uCreme<.5)shell=uShell*pow(clamp(dot(shell,vec3(.333))/.90,.86,1.07),.7);}
+      if(m<1.5){shell=texture2D(uSmoothShell,fract(p.yz*.75+.23)).rgb*w.x+texture2D(uSmoothShell,fract(p.xz*.75+.31)).rgb*w.y+texture2D(uSmoothShell,fract(p.xy*.75+.41)).rgb*w.z;if(uCreme<.5)shell=uShell*pow(clamp(dot(shell,vec3(.333))/.84,.76,1.13),.95);}
       float angle=atan(p.z,p.x)/6.2831853+.5;
       // Use the foot's own UVs so its pores keep their proportions on the thin rim.
       if(m>3.5&&m<5.5){
@@ -78,7 +92,16 @@ class MacaronViewer {
         return foot*(vec3(1.)-vec3(.16,.25,.38)*pore)*(.984+.016*micro);
       }
       if(m>1.5&&m<2.5){
-        if(uCreme<.5)return uFilling;
+        if(uCookieFlecks>.5){vec2 uv=abs(vLocalNormal.y)>.6?p.xz*.6+.5:vec2(angle*2.3,p.y*1.8+.22);return photoPatch(uv,vec2(.5,0.),vec2(.5,.5));}
+
+        if(uCreme<.5){
+          float ripple=.5+.5*sin(angle*104.+p.y*12.);
+          float velvet=hash(floor(p*240.));
+
+          vec3 photographed=photoPatch(vec2(angle*2.3,p.y*1.8+.22),vec2(.5,0.),vec2(.5,.5));
+          float finishTone=clamp(dot(photographed,vec3(.333))/.58,.86,1.09);
+          return uFilling*mix(1.,finishTone,.35)*(.978+.018*ripple+.014*velvet);
+        }
         // Smooth vanilla cream with sparse, fixed seeds; no photographed piping strokes.
         vec2 surface=abs(vLocalNormal.y)>.6?p.xz*20.:vec2(angle*120.,p.y*20.);
         vec2 cell=floor(surface),local=fract(surface);
@@ -138,11 +161,50 @@ class MacaronViewer {
       }
       color+=base*pow(max(0.,dot(n,normalize(vec3(.65,.25,-1.)))),2.)*.065;
     }
+
+    // Broad key, cool fill and warm grazing rim preserve the edible materials.
+    vec3 key=normalize(vec3(-.65,.95,1.25)),fill=normalize(vec3(.9,.35,.8)),rim=normalize(vec3(.45,.7,-.9));
+    float roughness=m<1.5?.35:m<3.5?.36:m<5.5?.78:.30;
+    if(uCreme>.5&&m<.5)roughness=.29;
+    if(m>8.5&&m<11.5)roughness=.76;
+    if(m>16.5)roughness=.78;
+    if(m>17.5)roughness=.23;
+    float poreShade=1.;
+    if(m>3.5&&m<4.5)poreShade=1.-.18*footPore(vUv);
+    float contactShade=1.;
+    if(m>1.5&&m<3.5){
+      float upper=smoothstep(.035,.21,vWorld.y);
+      float lower=1.-smoothstep(-.15,-.035,vWorld.y);
+      contactShade=1.-.21*upper*(1.-uOpen)-.12*lower;
+    }
+    vec3 albedo=base;
+    if(uTopDip>.5&&uPart<.5&&m<.5){float dip=smoothstep(.275,.295,vWorld.y);albedo=mix(albedo,uDipColor,dip);roughness=mix(roughness,.24,dip);}
+    if(uDipped>.5){
+      bool coated=(m<1.5&&(length(vWorld.xz)>.87||abs(vWorld.y)>.30))||(m>3.5&&m<5.5)||(m>1.5&&m<2.5&&abs(vLocalNormal.y)<.65);
+      if(coated){float dip=smoothstep(.005,.025,dot(vWorld.xz,uDipDirection));albedo=mix(albedo,uDipColor,dip);roughness=mix(roughness,.24,dip);}
+    }
+
+    if(m<.5&&uPart<.5){
+      float decorationShadow=0.;
+      if(uPearl0.z>0.)decorationShadow=max(decorationShadow,1.-smoothstep(uPearl0.z*.5,uPearl0.z*1.7,length(vWorld.xz-uPearl0.xy-vec2(.024,-.033))));
+      if(uPearl1.z>0.)decorationShadow=max(decorationShadow,1.-smoothstep(uPearl1.z*.5,uPearl1.z*1.7,length(vWorld.xz-uPearl1.xy-vec2(.024,-.033))));
+      if(uPearl2.z>0.)decorationShadow=max(decorationShadow,1.-smoothstep(uPearl2.z*.5,uPearl2.z*1.7,length(vWorld.xz-uPearl2.xy-vec2(.024,-.033))));
+      albedo*=1.-decorationShadow*.22;
+    }
+    float keyLight=max(0.,dot(n,key)),fillLight=max(0.,dot(n,fill));
+    float hemisphere=.46+.10*max(0.,n.y);
+    vec3 linearBase=pow(max(albedo,vec3(.001)),vec3(2.2));
+    vec3 linearColor=linearBase*(vec3(hemisphere)+vec3(1.,.96,.90)*keyLight*.64+vec3(.84,.91,1.)*fillLight*.16)*contactShade*poreShade;
+    float highlights=ggx(n,key,roughness)*.65+ggx(n,fill,roughness)*.12;
+    linearColor+=vec3(1.,.96,.89)*highlights;
+    linearColor+=linearBase*pow(max(0.,dot(n,rim)),3.)*.12;
+    if(uGold>.5&&m<.5)linearColor+=vec3(.09,.055,.008)*ggx(n,key,.26);
+    color=pow(max(linearColor,vec3(0.)),vec3(1./2.2));
     gl_FragColor=vec4(clamp(color,0.,1.),1.);}`;
     const shader=(type,src)=>{const s=gl.createShader(type);gl.shaderSource(s,src);gl.compileShader(s);if(!gl.getShaderParameter(s,gl.COMPILE_STATUS))throw Error(gl.getShaderInfoLog(s));return s;};
     this.program=gl.createProgram();const vs=shader(gl.VERTEX_SHADER,vertex),fs=shader(gl.FRAGMENT_SHADER,fragment);gl.attachShader(this.program,vs);gl.attachShader(this.program,fs);gl.linkProgram(this.program);if(!gl.getProgramParameter(this.program,gl.LINK_STATUS))throw Error(gl.getProgramInfoLog(this.program));gl.deleteShader(vs);gl.deleteShader(fs);
     gl.useProgram(this.program);this.attrs={};for(const key of ['aPosition','aNormal','aUv','aMaterial'])this.attrs[key]=gl.getAttribLocation(this.program,key);
-    this.uniforms={};for(const key of ['uRotation','uScale','uOpen','uPart','uTexture','uSmoothShell','uShell','uFilling','uCore','uLoaded','uDipped','uVanilla','uGold','uPhoto','uCreme','uMarble','uCocoa','uCrumb','uDipColor','uDipDirection','uPearl0','uPearl1','uPearl2'])this.uniforms[key]=gl.getUniformLocation(this.program,key);
+    this.uniforms={};for(const key of ['uCookieFlecks','uTopDip','uRotation','uScale','uOpen','uPart','uTexture','uSmoothShell','uShell','uFilling','uCore','uLoaded','uDipped','uVanilla','uGold','uPhoto','uCreme','uMarble','uCocoa','uCrumb','uDipColor','uDipDirection','uPearl0','uPearl1','uPearl2'])this.uniforms[key]=gl.getUniformLocation(this.program,key);
     this.texture=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,this.texture);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,1,1,0,gl.RGBA,gl.UNSIGNED_BYTE,new Uint8Array([255,235,205,255]));gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);gl.enable(gl.DEPTH_TEST);gl.disable(gl.CULL_FACE);gl.clearColor(0,0,0,0);
     this.smoothTexture=gl.createTexture();gl.bindTexture(gl.TEXTURE_2D,this.smoothTexture);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,1,1,0,gl.RGBA,gl.UNSIGNED_BYTE,new Uint8Array([255,235,205,255]));gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
   }
@@ -160,7 +222,7 @@ class MacaronViewer {
     const gl=this.gl;this.mesh.forEach(m=>gl.deleteBuffer(m.buffer));this.mesh=[];const arrays=[[],[],[],[]];
     const random=(x,y,seed)=>{const h=((x*17+y*131+seed*37)%251+251)%251;return (h*h*13+h*17)%251/251;};
     const poreAt=(s,t,part)=>{let pore=0;for(let j=-1;j<=1;j++)for(let i=-1;i<=1;i++){const cx=Math.floor(s)+i,cy=Math.floor(t)+j,key=(cx%96+96)%96;const dx=(s-cx-.12-.76*random(key,cy,17+part*9))*1.7,dy=t-cy-.12-.76*random(key,cy,31+part*9);if(random(key,cy,73+part*9)<.18)continue;const size=9+11*random(key,cy,57+part*9);pore=Math.max(pore,Math.exp(-(dx*dx+dy*dy)*size));}return pore;};
-    const addSurface=(part,material,profile,rough=0)=>{const isPhotoFoot=material===4;const count=isPhotoFoot?576:144,rings=profile.length,points=[];
+    const addSurface=(part,material,profile,rough=0)=>{const isPhotoFoot=material===4;const count=isPhotoFoot?576:192,rings=profile.length,points=[];
       for(let j=0;j<rings;j++)for(let i=0;i<=count;i++){const a=i/count*Math.PI*2;let [r,y]=profile[j];const t=j/(rings-1);
         if(isPhotoFoot){const pore=poreAt(i/count*96,t*2.8,part),envelope=Math.pow(Math.sin(t*Math.PI),.45);r+=envelope*(.006*Math.sin(a*71+t*9)*Math.sin(a*113-t*7)-.026*pore);y+=.004*Math.sin(a*39+part*7)+.003*Math.sin(a*83-t*3+part*11);}
         else{const wav=Math.sin(a*53+j*1.91)*Math.sin(a*79-j*.87);r+=rough*(.6+wav)*Math.min(1,r*10);y+=rough*.4*Math.sin(a*91+j*.91);}
@@ -168,14 +230,16 @@ class MacaronViewer {
         if(isPhotoFoot)uv=[i/count*96,t*2.8];else if(material===0)uv=[.25+x*.223,.25+z*.223];else if(material===1||material===4)uv=[.02+.46*(.5+.46*Math.sin(a*1.0)),.52+.46*(.1+Math.abs(y)*1.8)% .46];else if(material===2)uv=[.52+.46*(.5+.47*Math.sin(a)),.02+.46*(.5+y*2.7)];else uv=[.75+x*.7,.75+z*.7];
         const fullerCream=true;
         const radiusScale=part===2?(fullerCream?1.09:1.045):1;const separation=fullerCream?.035:0;
-        const layerY=part===0?y+.032+separation:part===1?y-.032-separation:y*(fullerCream?1.50:1.25);points.push({p:[x*radiusScale,layerY,z*radiusScale],n:[0,0,0],uv});
+        const layerY=part===0?y+.032+separation:part===1?y-.032-separation:y*(fullerCream?1.50:1.25);const piping=material===2?1+.0035*Math.sin(a*52)+.002*Math.sin(a*87+y*8):1;points.push({p:[x*radiusScale*piping,layerY,z*radiusScale*piping],n:[0,0,0],uv});
       }
       const indices=[];for(let j=0;j<rings-1;j++)for(let i=0;i<count;i++){const a=j*(count+1)+i,b=a+1,c=a+count+1,d=c+1;indices.push(a,c,b,b,c,d);}
       for(let i=0;i<indices.length;i+=3){const a=points[indices[i]].p,b=points[indices[i+1]].p,c=points[indices[i+2]].p,u=b.map((x,k)=>x-a[k]),v=c.map((x,k)=>x-a[k]);let n=[u[1]*v[2]-u[2]*v[1],u[2]*v[0]-u[0]*v[2],u[0]*v[1]-u[1]*v[0]];const center=a.map((x,k)=>(x+b[k]+c[k])/3);if(n[0]*center[0]+n[2]*center[2]+n[1]*center[1]<0)n=n.map(x=>-x);for(const ix of indices.slice(i,i+3))points[ix].n=points[ix].n.map((x,k)=>x+n[k]);}
+
+      for(let j=0;j<rings;j++){const start=points[j*(count+1)],end=points[j*(count+1)+count],average=start.n.map((x,k)=>x+end.n[k]);start.n=average;end.n=average;}
       for(const ix of indices){const v=points[ix],len=Math.hypot(...v.n)||1;arrays[part].push(...v.p,...v.n.map(x=>x/len),...v.uv,material);}
     };
     const photo=true;
-    const top=[];for(let j=0;j<=38;j++){const t=j/38*Math.PI/2;top.push([Math.sin(t)*.98,(photo?.19:.165)+(photo?.30:.32)*Math.pow(Math.max(0,Math.cos(t)),photo?.62:.40)]);}addSurface(0,0,top,.0014);
+    const top=[];for(let j=0;j<=64;j++){const t=j/64*Math.PI/2;top.push([Math.sin(t)*.98,(photo?.19:.165)+(photo?.25:.32)*Math.pow(Math.max(0,Math.cos(t)),photo?.70:.40)]);}addSurface(0,0,top,.0014);
     const bottom=top.map(([r,y])=>[r,-y]);
     addSurface(1,1,bottom,photo?.00045:.0016);
     // Fine irregular feet rather than broad polygonal rings.
@@ -203,8 +267,9 @@ class MacaronViewer {
   draw(){
     if(!this.supported||!this.flavor||this.canvas.hidden)return;const box=this.canvas.getBoundingClientRect();if(!box.width||!box.height)return;
     const gl=this.gl,dpr=Math.min(devicePixelRatio||1,2),w=box.width,h=box.height;if(this.canvas.width!==Math.round(w*dpr)||this.canvas.height!==Math.round(h*dpr)){this.canvas.width=Math.round(w*dpr);this.canvas.height=Math.round(h*dpr);}gl.viewport(0,0,this.canvas.width,this.canvas.height);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);gl.useProgram(this.program);
-    const scale=Math.min(w*.40,h*.43)*(1-.14*this.progress);gl.uniform2f(this.uniforms.uScale,2*scale/w,2*scale/h);gl.uniform2f(this.uniforms.uRotation,this.yaw,this.pitch);gl.uniform1f(this.uniforms.uOpen,this.progress);gl.uniform1f(this.uniforms.uLoaded,this.loaded?1:0);gl.uniform1f(this.uniforms.uDipped,this.flavor.dipped?1:0);gl.uniform1f(this.uniforms.uGold,this.flavor.gold?1:0);gl.uniform1f(this.uniforms.uPhoto,1);gl.uniform1f(this.uniforms.uCreme,this.flavor.id==='creme-brulee'?1:0);const finish=window.MacaronFinishes[this.flavor.id]||{};for(let i=0;i<3;i++){const pearl=finish.pearls?.[i];const radius=this.flavor.id==='hazelnoot'?.060:this.flavor.id==='brownie'?.096:.079;gl.uniform3fv(this.uniforms['uPearl'+i],pearl?[pearl[0],pearl[1],radius]:[0,0,0]);}gl.uniform1f(this.uniforms.uMarble,finish.marble||0);gl.uniform1f(this.uniforms.uCocoa,finish.cocoa?1:0);gl.uniform3fv(this.uniforms.uCrumb,this.color(finish.crumbColor||this.flavor.crumbs||'#b58a59'));gl.uniform2fv(this.uniforms.uDipDirection,finish.dip||[-1,0]);gl.uniform3fv(this.uniforms.uDipColor,this.color(finish.dipColor||'#482315'));gl.uniform3fv(this.uniforms.uShell,this.color(finish.shell||this.flavor.shell));gl.uniform3fv(this.uniforms.uFilling,this.color(finish.filling||this.flavor.filling));gl.uniform3fv(this.uniforms.uCore,this.color(this.flavor.core||this.flavor.filling));gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,this.texture);gl.uniform1i(this.uniforms.uTexture,0);gl.activeTexture(gl.TEXTURE1);gl.bindTexture(gl.TEXTURE_2D,this.smoothTexture);gl.uniform1i(this.uniforms.uSmoothShell,1);
+    const scale=Math.min(w*.40,h*.43)*(1-.14*this.progress);gl.uniform2f(this.uniforms.uScale,2*scale/w,2*scale/h);gl.uniform2f(this.uniforms.uRotation,this.yaw,this.pitch);gl.uniform1f(this.uniforms.uOpen,this.progress);gl.uniform1f(this.uniforms.uLoaded,this.loaded?1:0);gl.uniform1f(this.uniforms.uDipped,this.flavor.dipped?1:0);gl.uniform1f(this.uniforms.uGold,this.flavor.gold?1:0);gl.uniform1f(this.uniforms.uPhoto,1);gl.uniform1f(this.uniforms.uCreme,this.flavor.id==='creme-brulee'?1:0);const finish=window.MacaronFinishes[this.flavor.id]||{};gl.uniform1f(this.uniforms.uCookieFlecks,finish.cookieFlecks?1:0);gl.uniform1f(this.uniforms.uTopDip,finish.topDip?1:0);for(let i=0;i<3;i++){const pearl=finish.pearls?.[i];const radius=this.flavor.id==='hazelnoot'?.060:this.flavor.id==='brownie'?.096:.079;gl.uniform3fv(this.uniforms['uPearl'+i],pearl?[pearl[0],pearl[1],radius]:[0,0,0]);}gl.uniform1f(this.uniforms.uMarble,finish.marble||0);gl.uniform1f(this.uniforms.uCocoa,finish.cocoa?1:0);gl.uniform3fv(this.uniforms.uCrumb,this.color(finish.crumbColor||this.flavor.crumbs||'#b58a59'));gl.uniform2fv(this.uniforms.uDipDirection,finish.dip||[-1,0]);gl.uniform3fv(this.uniforms.uDipColor,this.color(finish.dipColor||'#482315'));gl.uniform3fv(this.uniforms.uShell,this.color(finish.shell||this.flavor.shell));gl.uniform3fv(this.uniforms.uFilling,this.color(finish.filling||this.flavor.filling));gl.uniform3fv(this.uniforms.uCore,this.color(this.flavor.core||this.flavor.filling));gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,this.texture);gl.uniform1i(this.uniforms.uTexture,0);gl.activeTexture(gl.TEXTURE1);gl.bindTexture(gl.TEXTURE_2D,this.smoothTexture);gl.uniform1i(this.uniforms.uSmoothShell,1);
     for(const m of this.mesh){gl.bindBuffer(gl.ARRAY_BUFFER,m.buffer);let offset=0;for(const [name,size] of [['aPosition',3],['aNormal',3],['aUv',2],['aMaterial',1]]){const loc=this.attrs[name];gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,size,gl.FLOAT,false,36,offset*4);offset+=size;}gl.uniform1f(this.uniforms.uPart,m.part);gl.drawArrays(gl.TRIANGLES,0,m.count);}
+    this.canvas.parentElement.style.setProperty('--shadow-width',String(.93+.12*Math.cos(this.yaw)));this.canvas.parentElement.style.setProperty('--shadow-opacity',String(.82-.16*this.progress));
     this.canvas.dataset.rotation=String(this.yaw);this.canvas.dataset.open=String(this.open);
   }
 }
