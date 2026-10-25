@@ -1,4 +1,7 @@
-.bake-round-wrap{padding:20px 0;max-width:1600px;margin:auto}
+/* Match the hero text's left edge and the blue panel's right edge. */
+.bake-round-wrap{padding:20px 0 20px min(5.5vw,88px);max-width:1600px;margin:auto}
+@media(max-width:1100px){.bake-round-wrap{padding-left:4.5vw}}
+@media(max-width:850px){.bake-round-wrap{padding-inline:6%}}
 .bake-round-wrap[hidden]+.values{margin-top:20px}
 .bake-round{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(150px,.8fr) minmax(0,1fr);align-items:center;padding:26px 30px;border:1px solid #efc58c;border-radius:14px;background:linear-gradient(120deg,#fff8eb,#fffdf8);box-shadow:0 8px 24px #683c1609}
 .bake-round-copy{min-width:0;padding-right:28px}
