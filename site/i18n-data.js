@@ -1,6 +1,24 @@
 /* Complete Dutch, English and French copy. Order: nl, en, fr. */
 window.KMCTranslations = {
   "copy": {
+    "whatsappTitle": ["Schuif gezellig aan", "Join us", "Rejoignez-nous"],
+    "whatsappScan": ["Scan de QR-code met je telefoon om onze WhatsApp-groep te openen. Gebruik de camera van je telefoon of de scanner in WhatsApp.", "Scan the QR code with your phone to open our WhatsApp group. Use your phone’s camera or the scanner in WhatsApp.", "Scannez le QR code avec votre téléphone pour ouvrir notre groupe WhatsApp. Utilisez l’appareil photo de votre téléphone ou le scanner de WhatsApp."],
+    "whatsappQrAlt": ["QR-code voor onze WhatsApp-groep", "QR code for our WhatsApp group", "QR code de notre groupe WhatsApp"],
+    "whatsappOpen": ["Open WhatsApp op dit toestel", "Open WhatsApp on this device", "Ouvrir WhatsApp sur cet appareil"],
+    "whatsappClose": ["Sluiten", "Close", "Fermer"],
+
+"bakeEyebrow": ["ER KOMT WEER IETS LEKKERS AAN","SOMETHING SWEET IS COMING","UNE NOUVELLE PAUSE GOURMANDE APPROCHE"],
+"bakeDates": ["15 t/m 21 december 2026","15–21 December 2026","Du 15 au 21 décembre 2026"],
+"orderRoundUpcoming": ["De volgende bakronde: {dates}.", "The next baking round: {dates}.", "La prochaine fournée : {dates}."],
+"orderRoundActive": ["We zijn aan het bakken! Deze bakronde: {dates}.", "We’re baking! This baking round: {dates}.", "Les fournées sont en cours ! Les dates : {dates}."],
+"orderRoundNone": ["Er is momenteel geen bakronde aangekondigd of bezig.", "There is no baking round announced or underway at the moment.", "Aucune fournée n’est annoncée ou en cours pour le moment."],
+"orderRoundInvite": ["Schuif gerust gezellig aan in onze WhatsApp-groep. Zo hoor je het zodra er weer iets lekkers aankomt.", "Come and join our WhatsApp group. You’ll hear as soon as something sweet is on its way.", "Rejoignez notre groupe WhatsApp. Vous serez au courant dès qu’une nouvelle pause gourmande se prépare."],
+"orderRoundDetails": ["Het menu, de prijzen en hoe je bestelt? Dat delen we in onze WhatsApp-groep.", "The menu, prices and how to order? We share those in our WhatsApp group.", "Le menu, les prix et comment commander ? Nous partageons tout cela dans notre groupe WhatsApp."],
+"bakeCountdownLabel": ["Tijd tot de volgende bakronde","Time until the next baking round","Temps avant la prochaine fournée"],
+"bakeDays": ["dagen","days","jours"],
+"bakeHours": ["uren","hours","heures"],
+"bakeMinutes": ["minuten","minutes","minutes"],
+"bakeNote": ["Via onze WhatsApp-groep · aanbod en bestelinformatie","Via our WhatsApp group · menu and ordering details","Via notre groupe WhatsApp · offre et infos de commande"],
     "favoritesFilter": ["Favorieten", "Favourites", "Coups de cœur"],
     "copy0": [
       "Kiss My Cookie — Kleine kunstwerkjes. Groots genieten.",
@@ -243,9 +261,9 @@ window.KMCTranslations = {
       "Crème Brûlée"
     ],
     "copy48": [
-      "Deze wil ik proeven",
-      "I’d love to try this",
-      "Envie d’y goûter"
+      "Deze wil ik",
+      "I want this",
+      "Je le veux"
     ],
     "copy49": [
       "Beschikbaarheid en bestelinformatie vind je bij de volgende bakronde.",
@@ -463,9 +481,9 @@ window.KMCTranslations = {
       "Un beau moment commence<br>par <em>une gourmandise.</em>"
     ],
     "copy92": [
-      "Onze bakrondes delen we via WhatsApp.<br>Daar ontdek je het menu, de prijzen en hoe je bestelt.",
-      "We announce our batches on WhatsApp.<br>That’s where you’ll find the menu, prices and how to order.",
-      "Nous annonçons nos fournées sur WhatsApp.<br>Vous y trouverez le menu, les prix et les modalités de commande."
+      "De volgende bakronde vind je bovenaan deze pagina.<br>Het menu, de prijzen en hoe je bestelt? Dat delen we in onze WhatsApp-groep.",
+      "You’ll find the next baking round at the top of this page.<br>The menu, prices and how to order? We share those in our WhatsApp group.",
+      "Retrouvez la prochaine fournée en haut de cette page.<br>Le menu, les prix et comment commander ? Nous partageons tout cela dans notre groupe WhatsApp."
     ],
     "copy93": [
       "De link opent onze WhatsApp-groep. Jij kiest of je aansluit.",
@@ -823,9 +841,9 @@ window.KMCTranslations = {
       "Préférence de langue"
     ],
     "extra4": [
-      "We bewaren alleen je gekozen taal (Nederlands, Engels of Frans) lokaal in je browser, zodat je die bij een volgend bezoek niet opnieuw hoeft te kiezen. Deze voorkeur wordt niet naar ons verzonden. Als je browser opslag blokkeert, werkt de taalkeuze nog steeds voor de huidige pagina.",
-      "We store only your chosen language (Dutch, English or French) locally in your browser so you won’t have to select it again on your next visit. This preference is not sent to us. If your browser blocks storage, the language selector still works on the current page.",
-      "Nous enregistrons uniquement la langue choisie (néerlandais, anglais ou français) localement dans votre navigateur, pour vous éviter de la sélectionner à nouveau lors de votre prochaine visite. Cette préférence ne nous est pas transmise. Si votre navigateur bloque le stockage, le choix de langue reste disponible pour la page en cours."
+      "We bewaren je gekozen taal (Nederlands, Engels of Frans) lokaal in je browser, zodat je die bij een volgend bezoek niet opnieuw hoeft te kiezen. Deze voorkeur wordt niet naar ons verzonden. Als je browser opslag blokkeert, werkt de taalkeuze nog steeds voor de huidige pagina.",
+      "We store your chosen language (Dutch, English or French) locally in your browser so you won’t have to select it again on your next visit. This preference is not sent to us. If your browser blocks storage, the language selector still works on the current page.",
+      "Nous enregistrons la langue choisie (néerlandais, anglais ou français) localement dans votre navigateur, pour vous éviter de la sélectionner à nouveau lors de votre prochaine visite. Cette préférence ne nous est pas transmise. Si votre navigateur bloque le stockage, le choix de langue reste disponible pour la page en cours."
     ],
     "saltedCookieName": [
       "Salted Brownie Cookie",
@@ -849,6 +867,17 @@ window.KMCTranslations = {
     ]
   },
   "dynamic": {
+"dag": ["day", "jour"],
+"dagen": ["days", "jours"],
+"De volgende bakronde": ["The next baking round","La prochaine fournée"],
+"Zin in de volgende bakronde?": ["Ready for the next baking round?","Envie de la prochaine fournée ?"],
+"Een week vol handgemaakte macarons & sweets.": ["A week of handmade macarons & sweets.","Une semaine de macarons et douceurs faits maison."],
+"Ontdek de nieuwe datums en het aanbod via WhatsApp.": ["Discover new dates and the menu via WhatsApp.","Découvrez les prochaines dates et notre offre sur WhatsApp."],
+"We starten over": ["We start in","Nous commençons dans"],
+"De bakronde is bezig!": ["The baking round is underway!","La fournée est en cours !"],
+"Blijf op de hoogte": ["Stay in the loop","Restez au courant"],
+"Ik doe mee": ["Count me in","Je participe"],
+"Houd me op de hoogte": ["Keep me updated","Tenez-moi au courant"],
     "Met de hand gemaakt. Met plezier gedeeld.": [
       "Handmade. Joyfully shared.",
       "Fait à la main. Partagé avec plaisir."
@@ -873,9 +902,9 @@ window.KMCTranslations = {
       "Language preference",
       "Préférence de langue"
     ],
-    "We bewaren alleen je gekozen taal (Nederlands, Engels of Frans) lokaal in je browser, zodat je die bij een volgend bezoek niet opnieuw hoeft te kiezen. Deze voorkeur wordt niet naar ons verzonden. Als je browser opslag blokkeert, werkt de taalkeuze nog steeds voor de huidige pagina.": [
-      "We store only your chosen language (Dutch, English or French) locally in your browser so you won’t have to select it again on your next visit. This preference is not sent to us. If your browser blocks storage, the language selector still works on the current page.",
-      "Nous enregistrons uniquement la langue choisie (néerlandais, anglais ou français) localement dans votre navigateur, pour vous éviter de la sélectionner à nouveau lors de votre prochaine visite. Cette préférence ne nous est pas transmise. Si votre navigateur bloque le stockage, le choix de langue reste disponible pour la page en cours."
+    "We bewaren je gekozen taal (Nederlands, Engels of Frans) lokaal in je browser, zodat je die bij een volgend bezoek niet opnieuw hoeft te kiezen. Deze voorkeur wordt niet naar ons verzonden. Als je browser opslag blokkeert, werkt de taalkeuze nog steeds voor de huidige pagina.": [
+      "We store your chosen language (Dutch, English or French) locally in your browser so you won’t have to select it again on your next visit. This preference is not sent to us. If your browser blocks storage, the language selector still works on the current page.",
+      "Nous enregistrons la langue choisie (néerlandais, anglais ou français) localement dans votre navigateur, pour vous éviter de la sélectionner à nouveau lors de votre prochaine visite. Cette préférence ne nous est pas transmise. Si votre navigateur bloque le stockage, le choix de langue reste disponible pour la page en cours."
     ],
     "Speculaas": [
       "Biscoff",

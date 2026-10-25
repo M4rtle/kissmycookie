@@ -3,6 +3,10 @@
 !/.gitignore
 !/README.md
 !/site/
+!/functions/
+!/migrations/
+!/tests/
+!/scripts/
 
 # Lokale instellingen en geheimen uitsluiten, ook binnen de website.
 **/.env
@@ -10,3 +14,5 @@
 **/node_modules/
 **/Thumbs.db
 **/.DS_Store
+**/.dev.vars
+**/.wrangler/

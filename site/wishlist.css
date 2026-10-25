@@ -1,0 +1,23 @@
+.wishlist-product{position:relative;min-width:0;display:flex;flex-direction:column}
+.bake-product-badge{display:inline-block;align-self:flex-start;max-width:100%;margin:8px 0 0;padding:5px 9px;border-radius:6px;background:#eaf0ff;color:#2556d8;font-size:11px;font-weight:500;line-height:1.4}
+.bake-product-badge[hidden]{display:none}
+.bake-stock-badge{background:#e9f1e4;color:#34502b}
+.wishlist-detail-actions>.bake-product-badge{margin:0}
+.wishlist-product[hidden]{display:none}
+.wishlist-product>.product{width:100%;flex:1}
+.wishlist-sweet>a{flex:1}
+.wishlist-product>.wishlist-button{position:absolute;top:6px;right:6px;z-index:2;display:grid;place-items:center;width:32px;height:32px;min-width:0;min-height:0;margin:0;padding:8px;border:0;border-radius:0;appearance:none;background:transparent;box-shadow:none;color:#91877e;cursor:pointer;transition:color .15s}
+.wishlist-button::after{content:'';position:absolute;inset:-6px}
+.wishlist-button svg{display:block;width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.wishlist-product>.wishlist-button[aria-pressed=true]{color:#2556d8}
+.wishlist-button[aria-pressed=true] svg{fill:currentColor}
+.wishlist-product>.wishlist-button:enabled:hover{background:transparent;box-shadow:none;color:#2556d8}
+.wishlist-button:disabled{cursor:default;opacity:.55}
+.wishlist-button:focus-visible{outline:3px solid #2556d8;outline-offset:3px}
+.wishlist-status{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:40;max-width:min(520px,calc(100vw - 32px));width:max-content;margin:0;padding:12px 18px;border:1px solid #e3d5c9;border-radius:12px;background:#fffaf6;color:#293b53;font-size:13px;box-shadow:0 4px 20px #30382c18;pointer-events:none}
+.wishlist-status:empty{display:none}
+.wishlist-detail-actions{display:flex;align-items:baseline;flex-wrap:wrap;gap:10px 22px;margin-top:25px}
+.wishlist-detail-actions>.text-link{margin:0;padding:0 0 5px;line-height:1.5}
+.wishlist-detail-actions>.wishlist-detail-button{position:relative;display:inline-flex;align-items:center;gap:7px;min-height:0;width:auto;margin:0;padding:0 0 5px;border:0;border-bottom:1px solid currentColor;border-radius:0;appearance:none;background:transparent;box-shadow:none;color:var(--ink);font:inherit;font-size:12px;line-height:1.5;cursor:pointer}
+.wishlist-detail-actions>.wishlist-detail-button[aria-pressed=true],.wishlist-detail-actions>.wishlist-detail-button:enabled:hover{color:#2556d8}
+.wishlist-detail-button::after{display:block;inset:-10px -4px}

@@ -261,3 +261,17 @@ body.has-welcome{overflow:hidden}
 /* Leave space between the favorite controls and its caption. */
 @media(min-width:1101px){.hero-showcase{top:calc(50% - 70px)}}
 @media(min-width:851px) and (max-width:1100px){.hero-showcase{top:40%}}
+
+/* Keep the flavor description and inside-view controls together below the photo. */
+.hero-visual{container-type:inline-size}
+.hero-footer{position:absolute;left:34px;right:34px;bottom:30px;display:grid;grid-template-columns:minmax(0,1fr);align-items:start;gap:20px;z-index:3}
+.hero-footer .hero-caption{position:static;width:auto;min-width:0}
+.hero-footer .hero-interaction{position:static;width:auto;min-width:0}
+.hero-footer .hero-caption>span,.hero-footer .hero-interaction>span{display:block;line-height:1.5}
+@container(min-width:560px){
+ .hero-footer{grid-template-columns:minmax(0,1fr) auto;gap:24px}
+ .hero-footer .hero-interaction{justify-self:end}
+}
+@media(min-width:851px) and (max-width:1100px){.hero-footer{left:24px;right:24px;bottom:26px}}
+@media(max-width:850px){.hero-footer{position:relative;inset:auto;width:100%}}
+@media(min-width:851px) and (max-width:1119px){.hero-showcase{top:23%}}

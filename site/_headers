@@ -1,0 +1,8 @@
+/opvolging*
+  Cache-Control: no-store
+  Referrer-Policy: no-referrer
+  X-Robots-Tag: noindex, nofollow, noarchive
+  X-Frame-Options: DENY
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'
+/wishlist-admin.js
+  Cache-Control: no-store
