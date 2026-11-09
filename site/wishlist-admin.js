@@ -5,6 +5,7 @@
   const statusNames = {planned:'Gepland',baking:'Aan het bakken',stock:'Bakken klaar / voorraadverkoop',closed:'Afgesloten',ended:'Bakperiode afgelopen'};
   let key, data, busy = false, updated, selectedRound, dirtyMode = null;
   let draft = new Set(), stockDraft = new Map(), stockSnapshot = '';
+  let orderId = crypto.randomUUID(), orderItems = [];
   const fragment = new URLSearchParams(location.hash.slice(1));
   if (fragment.has('key')) {
     key = fragment.get('key'); history.replaceState(null,'',location.pathname);
@@ -22,6 +23,8 @@
     q('#selection-fields').disabled = busy || !round || !['planned','baking'].includes(round.state) || Boolean(dirtyMode && dirtyMode !== 'selection');
     q('#stock-fields').disabled = busy || !round || round.status === 'closed' || Boolean(dirtyMode && dirtyMode !== 'stock');
     q('#create-round-fields').disabled = busy || Boolean(dirtyMode);
+    q('#order-fields').disabled = busy || !round || round.status === 'closed' || Boolean(dirtyMode && dirtyMode !== 'order');
+    for(const button of document.querySelectorAll('#order-list button'))button.disabled=busy || Boolean(dirtyMode);
     for (const mode of ['round','selection','stock']) {
       q('#save-'+mode).disabled = busy || dirtyMode !== mode;
       q('#discard-'+mode).disabled = busy || dirtyMode !== mode;
@@ -31,7 +34,12 @@
     const response = await fetch('/api/wishlist/' + path,{...options,cache:'no-store',headers:{'Authorization':'Bearer ' + key,...options.headers}});
     if (response.status === 401) throw new Error('Deze toegangslink is ongeldig of vervangen. Open je geldige persoonlijke link.');
     if (response.status === 409) throw new Error('De bakronde of voorraad is intussen gewijzigd. Annuleer je wijzigingen en probeer opnieuw.');
-    if (response.status === 400) throw new Error('Controleer de datums en aantallen. De einddatum mag niet vóór de begindatum liggen.');
+    if (response.status === 400) {
+      const error=await response.json();
+      if(error.error==='unknown_stock')throw new Error('Vul eerst een getelde voorraad in voor deze artikelen.');
+      if(error.error==='insufficient_stock')throw new Error('Onvoldoende beschikbare voorraad voor deze order.');
+      throw new Error(path==='orders'?'Controleer klantnaam, artikelen, aantallen en prijzen.':'Controleer de datums en aantallen. De einddatum mag niet vóór de begindatum liggen.');
+    }
     if (!response.ok) throw new Error('Het overzicht is even niet beschikbaar. Probeer opnieuw.');
     return response.json();
   }
@@ -92,6 +100,7 @@
     }
     if (!stockDraft.size) {const note=document.createElement('p');note.textContent=t('Publiceer eerst de productselectie om voorraad in te voeren.');q('#stock-results').append(note);}
     stockSummary();q('#admin-content').hidden=false;lock();
+    renderOrders();
   }
   function fillDrafts() {
     const round=current();draft=new Set(data.selection.products);
@@ -103,13 +112,13 @@
   async function load(round=selectedRound) {
     if(busy || dirtyMode)return;
     lock(true);
-    try {data=await api('admin'+(round?'?round='+encodeURIComponent(round):''));selectedRound=data.selected;updated=new Date();fillDrafts();render();message('');}
+    try {const next=await api('admin'+(round?'?round='+encodeURIComponent(round):''));if(next.selected!==data?.selected)resetOrder();data=next;selectedRound=data.selected;updated=new Date();fillDrafts();render();message('');}
     catch(error){message(error.message);}
     finally{lock(false);}
   }
   async function save(path,body,success) {
     if(busy)return;lock(true);let saved=false;
-    try{await api(path,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});dirtyMode=null;saved=true;}
+    try{await api(path,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});dirtyMode=null;if(path==='orders')resetOrder();saved=true;}
     catch(error){message(error.message);}
     finally{lock(false);}
     if(saved){await load();message(success);}
@@ -139,6 +148,72 @@
     if(next)await load(next.id);
   });
   q('#copy-link').addEventListener('click',async()=>{try{await navigator.clipboard.writeText(location.origin+'/opvolging#key='+encodeURIComponent(key));message('Persoonlijke link gekopieerd. Bewaar hem privé.');}catch{message('Kopiëren is niet gelukt. Gebruik je oorspronkelijke persoonlijke link.');}});
+  const money = cents => new Intl.NumberFormat(I18n.language,{style:'currency',currency:'EUR'}).format(cents/100);
+  const productName = id => t(KMCWishlistProducts.find(p=>p[0]===id)?.[1] || id)+' ('+(id.startsWith('macaron:')?'Macaron':t('Cookies & sweets'))+')';
+  function resetOrder(){orderId=crypto.randomUUID();orderItems=[];q('#order-form').reset();}
+  function markOrder(){dirtyMode='order';lock();}
+  function renderOrders(){
+    const host=q('#order-lines');host.replaceChildren();
+    const old=data.orders?.find(o=>o.id===orderId);
+    for(const stock of data.stock.items){
+      const previous=old?.items.find(i=>i.product===stock.product)?.quantity || 0;
+      if(!stock.available && !previous)continue;
+      const row=document.createElement('div');row.className='admin-stock-row';
+      const name=document.createElement('div');name.textContent=productName(stock.product)+' · '+t('Voorraad')+': '+(stock.quantity ?? '?');
+      const item=orderItems.find(i=>i.product===stock.product) || {product:stock.product,quantity:0,unitCents:0};
+      if(!orderItems.includes(item))orderItems.push(item);
+      const qtyLabel=document.createElement('label'),priceLabel=document.createElement('label');
+      qtyLabel.textContent=t('Aantal');priceLabel.textContent=t('Stukprijs (€)');
+      const qty=document.createElement('input'),price=document.createElement('input');
+      qty.type='number';qty.min='0';qty.max=String((stock.quantity || 0)+previous);qty.step='1';qty.value=item.quantity;
+      price.type='number';price.min='0';price.max='10000';price.step='0.01';price.value=(item.unitCents/100).toFixed(2);
+      qty.setAttribute('aria-label',t('Aantal')+': '+productName(stock.product));price.setAttribute('aria-label',t('Stukprijs (€)')+': '+productName(stock.product));
+      qty.disabled=stock.quantity===null;price.disabled=stock.quantity===null;
+      qty.addEventListener('input',()=>{item.quantity=qty.valueAsNumber;markOrder();updateTotal();});
+      price.addEventListener('input',()=>{item.unitCents=Math.round(price.valueAsNumber*100);markOrder();updateTotal();});
+      qtyLabel.append(qty);priceLabel.append(price);row.append(name,qtyLabel,priceLabel);host.append(row);
+    }
+    updateTotal();const list=q('#order-list');list.replaceChildren();
+    if(!data.orders?.length){const p=document.createElement('p');p.textContent=t('Nog geen orders.');list.append(p);}
+    for(const order of [...(data.orders || [])].reverse()){
+      const card=document.createElement('article');card.className='order-card';
+      const title=document.createElement('h3');title.textContent=order.number+' · '+order.customer;
+      const detail=document.createElement('p');detail.textContent=order.items.map(i=>i.quantity+' × '+productName(i.product)).join(', ');
+      const total=document.createElement('strong');total.textContent=money(order.items.reduce((sum,i)=>sum+i.quantity*i.unitCents,0))+(order.status==='cancelled'?' · '+t('Geannuleerd'):'');
+      const actions=document.createElement('div');actions.className='admin-selection-actions';
+      const add=(label,fn)=>{const b=document.createElement('button');b.type='button';b.textContent=t(label);b.disabled=busy || Boolean(dirtyMode);b.addEventListener('click',fn);actions.append(b);};
+      if(order.status==='active'){
+        add('Klantlabel',()=>printOrder(order,false));add('Intern label',()=>printOrder(order,true));add('CSV voor Brother',()=>exportOrder(order));
+        if(current()?.status!=='closed'){
+          add('Aanpassen',()=>{orderId=order.id;orderItems=order.items.map(i=>({...i}));q('#order-customer').value=order.customer;markOrder();renderOrders();q('#order-customer').focus();});
+          add('Order annuleren',()=>{if(confirm(t('Order annuleren en de voorraad terugzetten?')))save('orders',orderBody('cancel',order.id),'Order opgeslagen.');});
+        }
+      }
+      card.append(title,detail,total,actions);list.append(card);
+    }
+  }
+  function updateTotal(){q('#order-total').textContent=t('Totaal')+': '+money(orderItems.reduce((s,i)=>s+(i.quantity*i.unitCents || 0),0));}
+  function orderBody(action,id=orderId){return {round:data.selected,revision:data.stock.revision,roundRevision:current().revision,id,action,customer:q('#order-customer').value.trim(),items:orderItems.filter(i=>i.quantity>0)};}
+  q('#order-customer').addEventListener('input',markOrder);
+  q('#order-form').addEventListener('submit',event=>{event.preventDefault();if(busy || !q('#order-form').reportValidity())return;if(!orderItems.some(i=>i.quantity>0)){message('Kies minstens één artikel.');return;}save('orders',orderBody('save'),'Order opgeslagen.');});
+  q('#discard-order').addEventListener('click',()=>{resetOrder();dirtyMode=null;render();load();});
+  for(const button of document.querySelectorAll('[data-tab]'))button.addEventListener('click',()=>{
+    const tab=button.dataset.tab;
+    for(const b of document.querySelectorAll('[data-tab]'))b.setAttribute('aria-pressed',String(b===button));
+    for(const id of ['bake','stock','orders'])q('#tab-'+id).hidden=id!==tab;
+    q('#tab-planning').hidden=tab!=='bake';
+  });
+  function printOrder(order,internal){
+    const token=crypto.randomUUID();
+    try{sessionStorage.setItem('kmc-label-'+token,JSON.stringify({order,internal,language:I18n.language,items:order.items.map(i=>({...i,name:productName(i.product)}))}));window.open('/order-label.html#'+token,'_blank');}
+    catch{message('Het label kon niet worden geopend. Sta browseropslag en pop-ups toe.');}
+  }
+  function exportOrder(order){
+    const cell=v=>'"'+String(v).replace(/^[=+@\-\t\r]/,"'$&").replaceAll('"','""')+'"';
+    const rows=[['Ordernummer','Klantnaam','Totaal EUR','Artikelen'],[order.number,order.customer,(order.items.reduce((s,i)=>s+i.quantity*i.unitCents,0)/100).toFixed(2),order.items.map(i=>i.quantity+' x '+productName(i.product)).join(' | ')]];
+    const url=URL.createObjectURL(new Blob(['\uFEFF'+rows.map(r=>r.map(cell).join(',')).join('\r\n')],{type:'text/csv;charset=utf-8'}));
+    const a=document.createElement('a');a.href=url;a.download='order-'+order.number+'.csv';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  }
   window.addEventListener('beforeunload',event=>{if(dirtyMode){event.preventDefault();event.returnValue='';}});
   document.addEventListener('languagechange',render);
   document.addEventListener('visibilitychange',()=>{if(!document.hidden && key)load();});

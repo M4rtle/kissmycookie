@@ -55,7 +55,7 @@ export async function onRequest({request,env}) {
   if (!['GET','PUT','POST'].includes(request.method)) return json({error:'method'},405);
   const origin = request.headers.get('Origin');
   if ((origin && origin !== url.origin) || request.headers.get('Sec-Fetch-Site') === 'cross-site') return json({error:'origin'},403);
-  const admin = path === '/api/wishlist/admin' || path === '/api/wishlist/rounds' || path === '/api/wishlist/stock' || (path === '/api/wishlist/selection' && request.method !== 'GET');
+  const admin = path === '/api/wishlist/orders' || path === '/api/wishlist/admin' || path === '/api/wishlist/rounds' || path === '/api/wishlist/stock' || (path === '/api/wishlist/selection' && request.method !== 'GET');
   if (admin && !await authorized(request,env)) return json({error:'unauthorized'},401);
   if (!env.WISHLIST_DB) return json({error:'unavailable'},503);
   const db = env.WISHLIST_DB;
@@ -98,7 +98,46 @@ export async function onRequest({request,env}) {
       if (selected && !chosen) return json({error:'not_found'},404);
       const counts = await db.prepare('SELECT product_id, COUNT(*) AS count FROM wishlist_votes WHERE round_id=? GROUP BY product_id ORDER BY count DESC, product_id').bind(selected || '').all();
       const visitors = await db.prepare('SELECT COUNT(DISTINCT visitor_hash) AS count FROM wishlist_votes WHERE round_id=?').bind(selected || '').first();
-      return json({rounds:roundRows.results.map(({stock_json,...r})=>({...r,state:roundState(r,today)})),selected,counts:counts.results,visitors:visitors.count,selection:await selectionFor(selected),stock:{items:chosen ? JSON.parse(chosen.stock_json) : [],revision:chosen?.stock_revision || 0}});
+      return json({rounds:roundRows.results.map(({stock_json,orders_json,...r})=>({...r,state:roundState(r,today)})),selected,counts:counts.results,visitors:visitors.count,selection:await selectionFor(selected),orders:JSON.parse(chosen?.orders_json || '[]'),stock:{items:chosen ? JSON.parse(chosen.stock_json) : [],revision:chosen?.stock_revision || 0}});
+    }
+    if (path === '/api/wishlist/orders' && request.method === 'PUT') {
+      let body; try { body = await bodyOf(request,8192); } catch { return json({error:'body'},400); }
+      if (typeof body?.round !== 'string' || !validRevision(body.revision) || !validRevision(body.roundRevision) ||
+          typeof body.id !== 'string' || !/^[a-f0-9-]{36}$/.test(body.id) || !['save','cancel'].includes(body.action)) return json({error:'body'},400);
+      const round = await db.prepare('SELECT * FROM wishlist_rounds WHERE id=?').bind(body.round).first();
+      if (!round || round.status === 'closed') return json({error:'round_changed'},409);
+      const orders = JSON.parse(round.orders_json), old = orders.find(o=>o.id===body.id);
+      // Safe retry after a lost response: the same order cannot deduct stock twice.
+      if (body.action === 'save' && old && body.revision < round.stock_revision && JSON.stringify(old.items)===JSON.stringify(body.items) && old.customer===body.customer && old.status==='active') return json({ok:true});
+      if (body.action==='cancel' && old?.status==='cancelled') return json({ok:true});
+      if (round.stock_revision!==body.revision || round.revision!==body.roundRevision || old?.status==='cancelled') return json({error:'stock_changed'},409);
+      if (body.action==='cancel' && !old) return json({error:'body'},400);
+      if (body.action==='save' && (typeof body.customer!=='string' || !body.customer.trim() || body.customer.trim().length>100 ||
+          !Array.isArray(body.items) || !body.items.length || body.items.length>products.size || new Set(body.items.map(i=>i?.product)).size!==body.items.length ||
+          body.items.some(i=>!products.has(i?.product) || !Number.isSafeInteger(i.quantity) || i.quantity<1 || i.quantity>100000 || !Number.isSafeInteger(i.unitCents) || i.unitCents<0 || i.unitCents>1000000))) return json({error:'body'},400);
+      const stock=JSON.parse(round.stock_json);
+      if(old) for(const item of old.items) {
+        const s=stock.find(s=>s.product===item.product);
+        if(!s || s.quantity===null || s.quantity+item.quantity>100000) return json({error:'unknown_stock'},400);
+        if(s.quantity===0) s.available=true;
+        s.quantity+=item.quantity;
+      }
+      if(body.action==='save') for(const item of body.items) {
+        const s=stock.find(s=>s.product===item.product);
+        if(!s || s.quantity===null) return json({error:'unknown_stock'},400);
+        if(!s.available || s.quantity<item.quantity) return json({error:'insufficient_stock'},400);
+        s.quantity-=item.quantity; if(s.quantity===0)s.available=false;
+      }
+      const now=new Date().toISOString();
+      if(body.action==='cancel') {old.status='cancelled';old.updatedAt=now;}
+      else {
+        const order={id:body.id,number:old?.number || today.replaceAll('-','')+'-'+body.id.slice(0,8).toUpperCase(),customer:body.customer.trim(),
+          items:body.items.map(({product,quantity,unitCents})=>({product,quantity,unitCents})),status:'active',createdAt:old?.createdAt || now,updatedAt:now};
+        if(old) orders[orders.indexOf(old)]=order; else orders.push(order);
+      }
+      const result=await db.prepare(`UPDATE wishlist_rounds SET stock_json=?,orders_json=?,stock_revision=stock_revision+1 WHERE id=? AND stock_revision=? AND revision=? AND status!='closed'`)
+        .bind(JSON.stringify(stock),JSON.stringify(orders),body.round,body.revision,body.roundRevision).run();
+      return result.meta.changes ? json({ok:true}) : json({error:'stock_changed'},409);
     }
     if (path === '/api/wishlist/rounds' && request.method === 'POST') {
       let body; try { body = await bodyOf(request); } catch { return json({error:'body'},400); }

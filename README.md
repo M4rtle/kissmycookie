@@ -100,8 +100,8 @@ Aantallen blijven privé; de website toont alleen **Nog op voorraad**. Het vinkj
 uitzetten verbergt beschikbaarheid maar bewaart de interne telling; 0 schakelt
 beschikbaarheid uit.
 Een product met geregistreerde voorraad blijft beheerbaar als je het later uit de
-selectie haalt. Het zijn handmatige tellingen: er worden geen bestellingen of
-reserveringen aangemaakt en aantallen verminderen niet automatisch.
+selectie haalt. Handmatige tellingen blijven mogelijk. Het tabblad **Orders**
+vermindert de voorraad automatisch bij het opslaan van een bestelling.
 
 Sla iedere sectie op voordat je een andere bewerkt. Niet-opgeslagen wijzigingen
 blokkeren verversen en wisselen van ronde; gelijktijdige wijzigingen vanaf een
@@ -115,6 +115,46 @@ npx wrangler d1 execute kissmycookie-wishlist --remote --file=migrations/0003_ro
 ```
 
 ### Eenmalige Cloudflare-configuratie
+
+### Orders en labels (uitbreiding november 2026)
+
+De opvolgapp heeft afzonderlijke tabbladen **Bakronde**, **Voorraad** en **Orders**.
+De rondekeuze geldt voor alle tabbladen. Orders bevatten een klantnaam, automatisch
+ordernummer en artikelen met aantallen en stukprijzen in euro. De totaalprijs wordt
+uit de regels berekend; bedragen worden in gehele eurocenten opgeslagen.
+
+Alleen getelde, beschikbare voorraad kan worden besteld. Onbekende of onvoldoende
+voorraad blokkeert opslaan. Aanpassen verwerkt het verschil; annuleren zet aantallen
+terug en bewaart de geannuleerde order. Orders en voorraad worden samen atomair
+opgeslagen. Een gedeelde revisie voorkomt overschrijven vanaf een ander toestel;
+opnieuw verzenden van dezelfde opgeslagen order vermindert de voorraad niet opnieuw.
+Gesloten rondes zijn alleen leesbaar. Klantnamen, prijzen en aantallen blijven achter
+de persoonlijke beheerlink en verschijnen niet in de openbare API.
+
+Voer **vóór publicatie** op de bestaande database uit:
+
+```powershell
+npx wrangler d1 execute kissmycookie-wishlist --remote --file=migrations/0004_orders.sql
+```
+
+Bij een nieuwe database moet ook deze vierde migratie na 0001–0003 worden uitgevoerd.
+De lokale preview en API-tests voeren alle migraties automatisch uit.
+
+Elke actieve order biedt een klantlabel met logo en inhoud, een intern label met
+klantnaam, ordernummer en totaalprijs, en een CSV-download voor een P-touch Editor-
+sjabloon (kolommen Ordernummer, Klantnaam, Totaal EUR, Artikelen). CSV bevat gegevens,
+geen opmaak. Bewaar downloads en afdrukken zorgvuldig: ze bevatten klantgegevens.
+
+Labels openen in een apart venster, met 62 mm breedte en een lengte op basis van
+de inhoud. Gebruik op Windows de QL-700 via USB, de juiste Brother-driver en
+doorlopende 62 mm-rol, schaal 100%, geen browserkoppen/-voeten en automatisch
+afsnijden in de driver. Via het afdrukvenster kan ook een PDF worden opgeslagen.
+Een echte proefafdruk is nodig om de papierinstellingen en het snijden te bevestigen.
+Printen opent het afdrukvenster; er is geen lokale service voor stil afdrukken nodig.
+
+Validatie: `node --test tests/wishlist.test.mjs tests/orders.test.mjs`.
+
+### Basisconfiguratie
 
 Behoud het bestaande Pages-project, de Git-koppeling, de lege build command en
 outputmap `site`. Er is geen nieuw hostingplatform of betaald plan nodig.

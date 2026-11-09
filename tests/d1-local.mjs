@@ -5,6 +5,7 @@ export function localDatabase() {
   sqlite.exec(readFileSync(new URL('../migrations/0001_wishlist.sql',import.meta.url),'utf8'));
   sqlite.exec(readFileSync(new URL('../migrations/0002_bake_selection.sql',import.meta.url),'utf8'));
   sqlite.exec(readFileSync(new URL('../migrations/0003_round_management.sql',import.meta.url),'utf8'));
+  sqlite.exec(readFileSync(new URL('../migrations/0004_orders.sql',import.meta.url),'utf8'));
   const statement = (query,values=[]) => ({
     bind(...next) { return statement(query,next); },
     async first() { return sqlite.prepare(query).get(...values) || null; },
